@@ -18,7 +18,7 @@ const PERFIL = {
   domains: 'Risco, Pricing, Pagamentos, Chargeback',
   stack: 'C# · .NET · Node.js · AWS · Azure · PostgreSQL',
   local: 'São Paulo · Remoto',
-  bio: 'Mais de 5 anos no mercado financeiro e bancário construindo sistemas robustos e de alta disponibilidade — do Risco de Crédito Regulatório a APIs de Pagamentos e Chargeback. Perfil hands-on com visão de arquitetura: entro no código e enxergo o sistema como um todo, da modelagem de APIs à observabilidade em produção, passando por mensageria, cloud e automações com IA.',
+  bio: 'Engenheiro de Software com mais de 6 anos de experiência no mercado financeiro e bancário, especializado em construir sistemas robustos, escaláveis. Já atuei em domínios críticos como Risco de Crédito Regulatório, Risco de Mercado, Pricing, Liquidez, APIs de Pagamentos e Chargeback — entregando soluções que movimentam operações financeiras reais. Durante esses anos contribuí para a evolução de plataformas de sistemas Legacy Code para Cloud.\n\nPerfil hands-on com visão de arquitetura, contribuindo para o desenvolvimento de aplicações de alta disponibilidade e seguras.',
 };
 
 const profilePhoto = require('../../assets/profile-photo.jpeg') as number;
@@ -193,9 +193,30 @@ function CodeColumn() {
 export function SobreMim() {
   const { width } = useWindowDimensions();
   const isWide = width >= WIDE_BREAKPOINT;
+  const cardRef = useRef<View>(null);
+
+  useEffect(() => {
+    if (Platform.OS !== 'web' || !cardRef.current) return;
+    const el = cardRef.current as unknown as HTMLElement;
+    el.style.transition = 'transform 0.45s cubic-bezier(.2,.8,.3,1), box-shadow 0.45s ease';
+    const onEnter = () => {
+      el.style.transform = 'perspective(1400px) translateZ(28px) translateY(-4px)';
+      el.style.boxShadow = '0 44px 80px -24px rgba(0,0,0,.75), 0 0 0 1px #23272f';
+    };
+    const onLeave = () => {
+      el.style.transform = '';
+      el.style.boxShadow = '';
+    };
+    el.addEventListener('mouseenter', onEnter);
+    el.addEventListener('mouseleave', onLeave);
+    return () => {
+      el.removeEventListener('mouseenter', onEnter);
+      el.removeEventListener('mouseleave', onLeave);
+    };
+  }, []);
 
   return (
-    <View style={styles.card}>
+    <View ref={cardRef} style={styles.card}>
       <WindowBar />
       <View style={[styles.body, isWide && styles.bodyRow]}>
         <PhotoColumn isWide={isWide} />

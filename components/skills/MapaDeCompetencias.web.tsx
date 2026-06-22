@@ -200,10 +200,6 @@ export function MapaDeCompetencias() {
             );
           })}
         </View>
-        <Pressable onPress={triggerAnimation} style={styles.replayBtn}>
-          <MaterialCommunityIcons name="refresh" size={14} color="#38bdf8" />
-          <Text style={styles.replayText}>Reproduzir</Text>
-        </Pressable>
       </View>
 
       {/* ── Chart card ── */}

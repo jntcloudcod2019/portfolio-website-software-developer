@@ -12,9 +12,9 @@ import { ScrollReveal } from '@/components/ui/ScrollReveal';
 import { colors, spacing } from '@/constants/theme';
 
 type SectionProps = ViewProps & {
-  title?: string;
+  title?:    string;
   subtitle?: string;
-  children: React.ReactNode;
+  children:  React.ReactNode;
 };
 
 export const Section = forwardRef<View, SectionProps>(

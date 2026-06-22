@@ -3,3 +3,38 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* ── Theme tokens ───────────────────────────────────────────────────────────── */
+
+:root,
+[data-theme="dark"] {
+  --bg:             #08090b;
+  --bg-card:        #0e1014;
+  --bg-surface:     #13161d;
+  --border:         #1c1f26;
+  --text-primary:   #e8eaed;
+  --text-secondary: #9aa0a8;
+  --text-muted:     #6b7280;
+  --accent:         #38bdf8;
+}
+
+[data-theme="light"] {
+  --bg:             #f0f2f5;
+  --bg-card:        #ffffff;
+  --bg-surface:     #e8eaed;
+  --border:         #d1d5db;
+  --text-primary:   #0f1117;
+  --text-secondary: #4b5563;
+  --text-muted:     #9ca3af;
+  --accent:         #0284c7;
+}
+
+[data-theme="light"] body {
+  background-color: var(--bg);
+  color: var(--text-primary);
+}
+
+[data-theme="light"] .card,
+[data-theme="light"] [class*="card"] {
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+}

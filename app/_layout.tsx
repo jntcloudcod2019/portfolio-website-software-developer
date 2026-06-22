@@ -24,17 +24,11 @@ export default function RootLayout() {
           <Stack.Screen name="index" options={{ headerShown: false }} />
           <Stack.Screen
             name="projects"
-            options={{
-              title: 'Projetos',
-              headerBackTitle: 'Voltar',
-            }}
+            options={{ title: 'Projetos', headerBackTitle: 'Voltar' }}
           />
           <Stack.Screen
             name="project/[id]"
-            options={{
-              title: 'Projeto',
-              headerBackTitle: 'Voltar',
-            }}
+            options={{ title: 'Projeto', headerBackTitle: 'Voltar' }}
           />
         </Stack>
       </LikesProvider>

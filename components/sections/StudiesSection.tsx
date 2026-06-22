@@ -1,70 +1,179 @@
-import * as Linking from 'expo-linking';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 import React from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { Platform, StyleSheet, Text, View } from 'react-native';
 
 import { Section } from '@/components/layout/Section';
-import { colors, spacing } from '@/constants/theme';
-import { studies } from '@/content/studies';
+
+// ─── Constants ────────────────────────────────────────────────────────────────
+
+const MONO = Platform.select({
+  web: '"JetBrains Mono", "Courier New", monospace',
+  ios: 'Courier',
+  android: 'monospace',
+  default: 'monospace',
+});
+
+const SPACE = Platform.select({
+  web: '"Space Grotesk", sans-serif',
+  default: 'sans-serif',
+});
+
+// ─── Section Header ───────────────────────────────────────────────────────────
+
+function SectionHeader() {
+  const ruleWeb: object =
+    Platform.OS === 'web'
+      ? { background: 'linear-gradient(to right, #23262d, transparent)' }
+      : {};
+
+  return (
+    <View style={styles.headerRow}>
+      <Text style={[styles.headerLabel, { fontFamily: MONO }]}>ESTUDOS & ARTIGOS</Text>
+      <View style={[styles.headerRule, ruleWeb]} />
+    </View>
+  );
+}
+
+// ─── Placeholder ──────────────────────────────────────────────────────────────
+
+function Placeholder() {
+  const cardBgWeb: object =
+    Platform.OS === 'web'
+      ? {
+          background: 'linear-gradient(135deg, #0e1117 0%, #0b0d12 100%)',
+          boxShadow: '0 0 0 1px #1c1f26, 0 24px 48px -16px rgba(0,0,0,.6)',
+        }
+      : {};
+
+  const glowWeb: object =
+    Platform.OS === 'web'
+      ? { background: 'radial-gradient(circle at 50% 0%, #a78bfa10, transparent 70%)' }
+      : {};
+
+  return (
+    <View style={[styles.placeholderCard, cardBgWeb as object]}>
+      {/* Decorative glow */}
+      <View style={[styles.glow, glowWeb as object]} pointerEvents="none" />
+
+      {/* Icon */}
+      <View style={styles.iconWrap}>
+        <MaterialCommunityIcons name="book-open-page-variant-outline" size={36} color="#a78bfa40" />
+      </View>
+
+      {/* Text */}
+      <Text style={[styles.placeholderTitle, { fontFamily: SPACE }]}>
+        Em Desenvolvimento
+      </Text>
+      <Text style={[styles.placeholderSub, { fontFamily: MONO }]}>
+        Breve estarão disponíveis!
+      </Text>
+
+      {/* Dashed border accent */}
+      <View style={styles.dashedRow}>
+        {[...Array(5)].map((_, i) => (
+          <View key={i} style={[styles.dash, i === 2 && styles.dashAccent]} />
+        ))}
+      </View>
+    </View>
+  );
+}
+
+// ─── Root ─────────────────────────────────────────────────────────────────────
 
 export function StudiesSection({ sectionRef }: { sectionRef?: React.Ref<View> }) {
   return (
-    <Section ref={sectionRef} title="Estudos e Artigos" subtitle="Cursos e leituras recentes.">
-      <View style={styles.list}>
-        {studies.map((item) => (
-          <Pressable
-            key={item.id}
-            style={({ pressed }) => [styles.card, pressed && styles.cardPressed]}
-            onPress={() => Linking.openURL(item.url)}
-          >
-            <View style={styles.badge}>
-              <Text style={styles.badgeText}>{item.type}</Text>
-            </View>
-            <Text style={styles.title}>{item.title}</Text>
-            <Text style={styles.description}>{item.description}</Text>
-          </Pressable>
-        ))}
-      </View>
+    <Section ref={sectionRef} style={styles.sectionOverride as object}>
+      <SectionHeader />
+      <Placeholder />
     </Section>
   );
 }
 
+// ─── Styles ───────────────────────────────────────────────────────────────────
+
 const styles = StyleSheet.create({
-  list: {
-    gap: spacing.md,
+  sectionOverride: {
+    justifyContent: 'flex-start',
   },
-  card: {
-    backgroundColor: colors.surface,
-    borderRadius: 14,
-    padding: spacing.md,
-    borderWidth: 1,
-    borderColor: colors.border,
+
+  /* Header */
+  headerRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 16,
+    marginBottom: 32,
   },
-  cardPressed: {
-    opacity: 0.85,
-  },
-  badge: {
-    alignSelf: 'flex-start',
-    backgroundColor: colors.surfaceLight,
-    paddingHorizontal: spacing.sm,
-    paddingVertical: 4,
-    borderRadius: 6,
-    marginBottom: spacing.sm,
-  },
-  badgeText: {
-    fontSize: 11,
-    fontWeight: '700',
-    color: colors.accentSecondary,
+  headerLabel: {
+    fontSize: 13,
+    color: '#9ca3af',
+    letterSpacing: 5,
     textTransform: 'uppercase',
   },
-  title: {
-    fontSize: 16,
-    fontWeight: '700',
-    color: colors.text,
-    marginBottom: spacing.xs,
+  headerRule: {
+    flex: 1,
+    height: 1,
+    backgroundColor: '#23262d',
   },
-  description: {
-    fontSize: 13,
-    color: colors.textMuted,
-    lineHeight: 20,
+
+  /* Placeholder card */
+  placeholderCard: {
+    width: '100%',
+    maxWidth: 560,
+    alignSelf: 'center',
+    backgroundColor: '#0e1014',
+    borderWidth: 1,
+    borderColor: '#1c1f26',
+    borderRadius: 20,
+    paddingVertical: 56,
+    paddingHorizontal: 32,
+    alignItems: 'center',
+    gap: 12,
+    overflow: 'hidden',
+  },
+  glow: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    height: 120,
+  },
+
+  iconWrap: {
+    width: 72,
+    height: 72,
+    borderRadius: 20,
+    backgroundColor: '#a78bfa0a',
+    borderWidth: 1,
+    borderColor: '#a78bfa20',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 8,
+  },
+
+  placeholderTitle: {
+    fontSize: 20,
+    fontWeight: '600',
+    color: '#e8eaed',
+    letterSpacing: -0.2,
+  },
+  placeholderSub: {
+    fontSize: 12.5,
+    color: '#4b5159',
+    letterSpacing: 1,
+  },
+
+  dashedRow: {
+    flexDirection: 'row',
+    gap: 6,
+    marginTop: 24,
+  },
+  dash: {
+    width: 24,
+    height: 2,
+    borderRadius: 1,
+    backgroundColor: '#1c1f26',
+  },
+  dashAccent: {
+    backgroundColor: '#a78bfa40',
   },
 });

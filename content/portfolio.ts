@@ -38,7 +38,7 @@ export const portfolio = {
   contact: {
     email: 'jonathanfrnnd3@gmail.com',
     phone: '+55 11 949908369',
-    linkedin: 'https://www.linkedin.com/in/seu-perfil',
+    linkedin: 'https://www.linkedin.com/in/jonathan-f-silva-60a918162',
     github: 'https://github.com/jntcloudcod2019',
   },
 } as const;
