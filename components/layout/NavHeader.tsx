@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   Platform,
   Pressable,
@@ -7,6 +7,7 @@ import {
   Text,
   View,
 } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 
 import { useAppConfig, useTranslations } from '@/context/AppConfigContext';
 import type { Lang } from '@/constants/i18n';
@@ -44,8 +45,107 @@ const HoverableView = View as React.ComponentType<
   React.ComponentProps<typeof View> & {
     onMouseEnter?: () => void;
     onMouseLeave?: () => void;
+    ref?: React.Ref<View>;
   }
 >;
+
+// ─── NotificationBell ────────────────────────────────────────────────────────
+
+function NotificationBell() {
+  const [hovered, setHovered] = useState(false);
+  const [open, setOpen]       = useState(false);
+  const wrapRef               = useRef<View>(null);
+
+  useEffect(() => {
+    if (Platform.OS !== 'web' || !open) return;
+
+    const handleMouseDown = (e: MouseEvent) => {
+      const el = wrapRef.current as unknown as HTMLElement | null;
+      if (el && !el.contains(e.target as Node)) {
+        setOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleMouseDown);
+    return () => document.removeEventListener('mousedown', handleMouseDown);
+  }, [open]);
+
+  const bellOuterWeb: object =
+    Platform.OS === 'web'
+      ? { position: 'relative', overflow: 'visible' }
+      : {};
+
+  const bellTransWeb: object =
+    Platform.OS === 'web'
+      ? { transition: 'transform 0.18s ease', cursor: 'pointer' }
+      : {};
+
+  const bellHoverWeb: object =
+    hovered && Platform.OS === 'web'
+      ? { transform: 'rotate(-15deg) scale(1.12)' }
+      : {};
+
+  const popupWeb: object =
+    Platform.OS === 'web'
+      ? {
+          position:      'absolute',
+          top:           '100%',
+          left:          0,
+          marginTop:     6,
+          zIndex:        600,
+          minWidth:      220,
+          boxShadow:     '0 12px 40px -8px rgba(0,0,0,.7), 0 0 0 1px #23272f',
+          opacity:       open ? 1 : 0,
+          pointerEvents: open ? 'auto' : 'none',
+          transition:    'opacity 0.18s ease',
+        }
+      : {};
+
+  return (
+    <HoverableView
+      ref={wrapRef}
+      style={[styles.bellOuter, bellOuterWeb as object]}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+    >
+      <Pressable
+        onPress={() => setOpen((v) => !v)}
+        style={styles.bellPressable}
+        accessibilityLabel="Notificações"
+      >
+        <View style={[bellTransWeb as object, bellHoverWeb as object]}>
+          <Ionicons
+            name={open ? 'notifications' : 'notifications-outline'}
+            size={20}
+            color={open ? '#38bdf8' : hovered ? '#cdd1d7' : '#6b7280'}
+          />
+        </View>
+        <View style={styles.badge} />
+      </Pressable>
+
+      <View style={[styles.popup, popupWeb as object]} pointerEvents={open ? 'auto' : 'none'}>
+        <View style={styles.popupHeader}>
+          <Text style={[styles.popupTitle, { fontFamily: MONO }]}>Notificações</Text>
+          <View style={styles.popupBadgePill}>
+            <Text style={[styles.popupBadgeText, { fontFamily: MONO }]}>1</Text>
+          </View>
+        </View>
+        <View style={styles.popupDivider} />
+        <View style={styles.popupItem}>
+          <View style={styles.popupDot} />
+          <View style={{ flex: 1, gap: 2 }}>
+            <Text style={[styles.popupItemTitle, { fontFamily: MONO }]}>
+              Portfólio atualizado
+            </Text>
+            <Text style={[styles.popupItemSub, { fontFamily: MONO }]}>
+              Novas seções disponíveis · agora
+            </Text>
+          </View>
+        </View>
+      </View>
+    </HoverableView>
+  );
+}
 
 // ─── LangTabs ────────────────────────────────────────────────────────────────
 
@@ -180,6 +280,7 @@ export function NavHeader({ activeSection, onNavigate }: NavHeaderProps) {
     Platform.OS === 'web'
       ? {
           position: 'fixed',
+          overflow: 'visible',
           backdropFilter: 'blur(18px)',
           WebkitBackdropFilter: 'blur(18px)',
           background: 'rgba(8, 9, 11, 0.86)',
@@ -190,16 +291,8 @@ export function NavHeader({ activeSection, onNavigate }: NavHeaderProps) {
   return (
     <View style={[styles.bar, barBgWeb as object]}>
 
-      {/* Left: Logo */}
-      <View style={styles.logoWrap}>
-        <Text style={[styles.logoText, { fontFamily: MONO }]}>
-          <Text style={{ color: '#38bdf8' }}>J</Text>
-          <Text style={{ color: '#818cf8' }}>.</Text>
-          <Text style={{ color: '#38bdf8' }}>S</Text>
-        </Text>
-        <View style={styles.logoDivider} />
-        <Text style={[styles.logoSub, { fontFamily: MONO }]}>dev</Text>
-      </View>
+      {/* Left: Notification bell */}
+      <NotificationBell />
 
       {/* Center: Nav items — truly centered */}
       <ScrollView
@@ -242,29 +335,97 @@ const styles = StyleSheet.create({
     borderBottomColor: '#1c1f26',
   },
 
-  /* Logo — left anchor */
-  logoWrap: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-    paddingLeft: 24,
-    paddingRight: 16,
-    flexShrink: 0,
+  /* ── Notification Bell ────────────────────────────────────────────────── */
+
+  bellOuter: {
+    paddingLeft:  20,
+    paddingRight: 12,
+    height:       54,
+    flexShrink:   0,
+    position:     'relative',
   },
-  logoText: {
-    fontSize: 17,
-    fontWeight: '700',
+  bellPressable: {
+    height:         54,
+    justifyContent: 'center',
+    alignItems:     'center',
+    position:       'relative',
+  },
+
+  /* Red badge dot */
+  badge: {
+    position:        'absolute',
+    top:             12,
+    right:           10,
+    width:           7,
+    height:          7,
+    borderRadius:    4,
+    backgroundColor: '#f87171',
+    borderWidth:     1.5,
+    borderColor:     '#08090b',
+  },
+
+  /* Popup card */
+  popup: {
+    backgroundColor: '#0e1014',
+    borderWidth:     1,
+    borderColor:     '#23272f',
+    borderRadius:    12,
+    overflow:        'hidden',
+  },
+  popupHeader: {
+    flexDirection:  'row',
+    alignItems:     'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 14,
+    paddingVertical:   10,
+  },
+  popupTitle: {
+    fontSize:      11,
+    fontWeight:    '600',
+    color:         '#9aa0a8',
     letterSpacing: 1,
+    textTransform: 'uppercase',
   },
-  logoDivider: {
-    width: 1,
-    height: 16,
+  popupBadgePill: {
+    backgroundColor: '#38bdf820',
+    borderWidth:     1,
+    borderColor:     '#38bdf840',
+    borderRadius:    999,
+    paddingHorizontal: 6,
+    paddingVertical:   2,
+  },
+  popupBadgeText: {
+    fontSize:  10,
+    color:     '#38bdf8',
+    fontWeight: '700',
+  },
+  popupDivider: {
+    height:          1,
     backgroundColor: '#1c1f26',
   },
-  logoSub: {
-    fontSize: 11,
-    color: '#38bdf870',
-    letterSpacing: 2,
+  popupItem: {
+    flexDirection: 'row',
+    alignItems:    'flex-start',
+    gap:           10,
+    padding:       14,
+  },
+  popupDot: {
+    width:           7,
+    height:          7,
+    borderRadius:    4,
+    backgroundColor: '#38bdf8',
+    marginTop:       4,
+    flexShrink:      0,
+  },
+  popupItemTitle: {
+    fontSize:  12,
+    color:     '#e8eaed',
+    fontWeight: '500',
+  },
+  popupItemSub: {
+    fontSize:  10,
+    color:     '#4b5159',
+    letterSpacing: 0.3,
   },
 
   /* Nav scroll — takes remaining space, centers content */
