@@ -9,17 +9,7 @@ import {
   View,
 } from 'react-native';
 
-// ─── Data ─────────────────────────────────────────────────────────────────────
-
-const PERFIL = {
-  name: 'Jonathan F. Silva',
-  role: 'Engenheiro de Software Full Stack',
-  focus: 'sistemas financeiros · escaláveis · alta disponibilidade',
-  domains: 'Risco, Pricing, Pagamentos, Chargeback',
-  stack: 'C# · .NET · Node.js · AWS · Azure · PostgreSQL',
-  local: 'São Paulo · Remoto',
-  bio: 'Engenheiro de Software com mais de 6 anos de experiência no mercado financeiro e bancário, especializado em construir sistemas robustos, escaláveis. Já atuei em domínios críticos como Risco de Crédito Regulatório, Risco de Mercado, Pricing, Liquidez, APIs de Pagamentos e Chargeback — entregando soluções que movimentam operações financeiras reais. Durante esses anos contribuí para a evolução de plataformas de sistemas Legacy Code para Cloud.\n\nPerfil hands-on com visão de arquitetura, contribuindo para o desenvolvimento de aplicações de alta disponibilidade e seguras.',
-};
+import { useTranslations } from '@/context/AppConfigContext';
 
 const profilePhoto = require('../../assets/profile-photo.jpeg') as number;
 
@@ -36,15 +26,6 @@ const SPACE = Platform.select({
   web: '"Space Grotesk", sans-serif',
   default: 'sans-serif',
 });
-
-const KV_ROWS: { key: string; value: string }[] = [
-  { key: 'name', value: PERFIL.name },
-  { key: 'role', value: PERFIL.role },
-  { key: 'focus', value: PERFIL.focus },
-  { key: 'domains', value: PERFIL.domains },
-  { key: 'stack', value: PERFIL.stack },
-  { key: 'local', value: PERFIL.local },
-];
 
 const PHOTO_W = 200;
 const PHOTO_H = 230;
@@ -145,8 +126,18 @@ function BlinkingCursor() {
 // ─── CodeColumn ──────────────────────────────────────────────────────────────
 
 function CodeColumn() {
+  const t = useTranslations();
   const bioWeb: object =
     Platform.OS === 'web' ? { fontFamily: SPACE, fontWeight: '300' } : {};
+
+  const kvRows = [
+    { key: 'name',    value: 'Jonathan F. Silva' },
+    { key: 'role',    value: t['about_role'] },
+    { key: 'focus',   value: t['about_focus'] },
+    { key: 'domains', value: t['about_domains'] },
+    { key: 'stack',   value: t['about_stack'] },
+    { key: 'local',   value: t['about_local'] },
+  ];
 
   return (
     <View style={styles.codeCol}>
@@ -161,7 +152,7 @@ function CodeColumn() {
 
       {/* Key-value block */}
       <View style={styles.kvBlock}>
-        {KV_ROWS.map((row) => (
+        {kvRows.map((row) => (
           <View key={row.key} style={styles.kvRow}>
             <Text style={[styles.kvKey, { fontFamily: MONO }]}>{row.key}:</Text>
             <Text style={[styles.kvValue, { fontFamily: MONO }]} numberOfLines={2}>
@@ -179,7 +170,7 @@ function CodeColumn() {
 
       {/* Bio */}
       <View style={styles.bioBorder}>
-        <Text style={[styles.bioText, bioWeb as object]}>{PERFIL.bio}</Text>
+        <Text style={[styles.bioText, bioWeb as object]}>{t['about_bio']}</Text>
       </View>
 
       {/* Blinking cursor */}

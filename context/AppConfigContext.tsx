@@ -28,10 +28,9 @@ export function useAppConfig() {
 
 export function useTranslations() {
   const { lang } = useContext(AppConfigContext);
-  // lazy import to avoid circular deps
   // eslint-disable-next-line @typescript-eslint/no-var-requires
   const { i18n } = require('@/constants/i18n') as { i18n: Record<string, Record<string, string>> };
-  return i18n[lang] as Record<string, string>;
+  return i18n[lang];
 }
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────

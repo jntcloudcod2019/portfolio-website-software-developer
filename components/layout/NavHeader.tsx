@@ -1,193 +1,353 @@
-import { BlurView } from 'expo-blur';
-import React, { useCallback, useState } from 'react';
+import React, { useState } from 'react';
 import {
-  Modal,
   Platform,
   Pressable,
+  ScrollView,
   StyleSheet,
   Text,
   View,
 } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { colors, spacing } from '@/constants/theme';
+import { useAppConfig, useTranslations } from '@/context/AppConfigContext';
+import type { Lang } from '@/constants/i18n';
 
-export type SectionKey = 'about' | 'experience' | 'projects' | 'studies' | 'skills' | 'contact';
+// ─── Types ────────────────────────────────────────────────────────────────────
 
-const NAV_ITEMS: { key: SectionKey; label: string }[] = [
-  { key: 'about', label: 'Sobre' },
-  { key: 'experience', label: 'Experiência' },
-  { key: 'projects', label: 'Projetos' },
-  { key: 'studies', label: 'Estudos' },
-  { key: 'skills', label: 'Habilidades' },
-  { key: 'contact', label: 'Contato' },
+export type SectionKey =
+  | 'about'
+  | 'experience'
+  | 'projects'
+  | 'studies'
+  | 'skills'
+  | 'contact';
+
+interface NavHeaderProps {
+  activeSection: SectionKey;
+  onNavigate: (key: SectionKey) => void;
+}
+
+// ─── Constants ────────────────────────────────────────────────────────────────
+
+const MONO = Platform.select({
+  web: '"JetBrains Mono", "Courier New", monospace',
+  ios: 'Courier',
+  android: 'monospace',
+  default: 'monospace',
+});
+
+const SPACE = Platform.select({
+  web: '"Space Grotesk", sans-serif',
+  default: 'sans-serif',
+});
+
+const HoverableView = View as React.ComponentType<
+  React.ComponentProps<typeof View> & {
+    onMouseEnter?: () => void;
+    onMouseLeave?: () => void;
+  }
+>;
+
+// ─── LangTabs ────────────────────────────────────────────────────────────────
+
+const LANG_TABS: { code: Lang; flag: string; label: string }[] = [
+  { code: 'pt', flag: '🇧🇷', label: 'PT' },
+  { code: 'en', flag: '🇺🇸', label: 'EN' },
 ];
 
-type NavHeaderProps = {
-  onNavigate: (key: SectionKey) => void;
-};
-
-export function NavHeader({ onNavigate }: NavHeaderProps) {
-  const insets = useSafeAreaInsets();
-  const [menuOpen, setMenuOpen] = useState(false);
-
-  const toggleMenu = useCallback(() => {
-    setMenuOpen((prev) => !prev);
-  }, []);
-
-  const closeMenu = useCallback(() => {
-    setMenuOpen(false);
-  }, []);
-
-  const handleNavigate = useCallback(
-    (key: SectionKey) => {
-      closeMenu();
-      onNavigate(key);
-    },
-    [closeMenu, onNavigate],
-  );
+function LangTabs() {
+  const { lang, setLang } = useAppConfig();
 
   return (
-    <>
-      <View
-        style={[styles.headerBar, { paddingTop: insets.top + spacing.sm }]}
-        pointerEvents="box-none"
-      >
-        <Pressable
-          onPress={toggleMenu}
-          style={({ pressed }) => [
-            styles.hamburger,
-            pressed && styles.hamburgerPressed,
-          ]}
-          accessibilityRole="button"
-          accessibilityLabel={menuOpen ? 'Fechar menu' : 'Abrir menu'}
-          accessibilityState={{ expanded: menuOpen }}
-        >
-          <View style={[styles.line, menuOpen && styles.lineTop]} />
-          <View style={[styles.line, menuOpen && styles.lineMiddle]} />
-          <View style={[styles.line, menuOpen && styles.lineBottom]} />
-        </Pressable>
-      </View>
+    <View style={styles.tabsWrap}>
+      {LANG_TABS.map((tab, i) => {
+        const active = lang === tab.code;
 
-      <Modal
-        visible={menuOpen}
-        transparent
-        animationType="fade"
-        onRequestClose={closeMenu}
-        statusBarTranslucent
-      >
-        <Pressable style={styles.overlayPressable} onPress={closeMenu}>
-          {Platform.OS === 'web' ? (
-            <View style={styles.webBlurOverlay} />
-          ) : (
-            <BlurView intensity={80} tint="dark" style={StyleSheet.absoluteFill} />
-          )}
-          <View style={[styles.dimLayer, Platform.OS === 'web' && styles.dimLayerWeb]} />
-        </Pressable>
+        const tabActiveBarWeb: object =
+          Platform.OS === 'web' && active
+            ? {
+                background:
+                  tab.code === 'pt'
+                    ? 'linear-gradient(to right, #34d399, #38bdf8)'
+                    : 'linear-gradient(to right, #38bdf8, #818cf8)',
+              }
+            : {};
 
-        <View style={styles.menuLayer} pointerEvents="box-none">
-          <View style={styles.menuCenter}>
-            {NAV_ITEMS.map((item) => (
-              <Pressable
-                key={item.key}
-                onPress={() => handleNavigate(item.key)}
-                style={({ pressed }) => [
-                  styles.menuItem,
-                  pressed && styles.menuItemPressed,
+        const tabTransWeb: object =
+          Platform.OS === 'web' ? { transition: 'background-color 0.18s ease' } : {};
+
+        return (
+          <React.Fragment key={tab.code}>
+            {i > 0 && <View style={styles.tabSep} />}
+            <Pressable
+              onPress={() => setLang(tab.code)}
+              style={[styles.tab, active && styles.tabActive, tabTransWeb as object]}
+              accessibilityLabel={tab.code === 'pt' ? 'Português' : 'English'}
+            >
+              <Text style={styles.tabFlag}>{tab.flag}</Text>
+              <Text
+                style={[
+                  styles.tabLabel,
+                  { fontFamily: MONO, color: active ? '#e8eaed' : '#4b5159' },
                 ]}
               >
-                <Text style={styles.menuItemText}>{item.label}</Text>
-              </Pressable>
-            ))}
-          </View>
-        </View>
-      </Modal>
-    </>
+                {tab.label}
+              </Text>
+              {/* Active accent bar */}
+              <View
+                style={[
+                  styles.tabBar,
+                  { opacity: active ? 1 : 0 },
+                  tabActiveBarWeb as object,
+                ]}
+              />
+            </Pressable>
+          </React.Fragment>
+        );
+      })}
+    </View>
   );
 }
 
+// ─── NavItem ──────────────────────────────────────────────────────────────────
+
+function NavItem({
+  sectionKey,
+  label,
+  active,
+  onPress,
+}: {
+  sectionKey: SectionKey;
+  label: string;
+  active: boolean;
+  onPress: () => void;
+}) {
+  const [hovered, setHovered] = useState(false);
+
+  const labelColor = active ? '#e8eaed' : hovered ? '#cdd1d7' : '#6b7280';
+
+  const transitionWeb: object =
+    Platform.OS === 'web' ? { transition: 'color 0.18s ease' } : {};
+
+  const activeBarWeb: object =
+    Platform.OS === 'web' && active
+      ? { background: 'linear-gradient(to right, #38bdf8, #818cf8)' }
+      : {};
+
+  return (
+    <HoverableView
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+    >
+      <Pressable onPress={onPress} style={styles.navItem}>
+        <Text
+          style={[
+            styles.navLabel,
+            { color: labelColor, fontFamily: SPACE },
+            transitionWeb as object,
+          ]}
+        >
+          {label}
+        </Text>
+
+        <View
+          style={[
+            styles.activeBar,
+            { opacity: active ? 1 : 0 },
+            activeBarWeb as object,
+            Platform.OS === 'web' && ({ transition: 'opacity 0.2s ease' } as object),
+          ]}
+        />
+      </Pressable>
+    </HoverableView>
+  );
+}
+
+// ─── Root ─────────────────────────────────────────────────────────────────────
+
+export function NavHeader({ activeSection, onNavigate }: NavHeaderProps) {
+  const t = useTranslations();
+
+  const navItems: { key: SectionKey; label: string }[] = [
+    { key: 'about',      label: t['nav_home'] },
+    { key: 'experience', label: t['nav_experience'] },
+    { key: 'projects',   label: t['nav_projects'] },
+    { key: 'studies',    label: t['nav_studies'] },
+    { key: 'skills',     label: t['nav_skills'] },
+    { key: 'contact',    label: t['nav_contact'] },
+  ];
+
+  const barBgWeb: object =
+    Platform.OS === 'web'
+      ? {
+          position: 'fixed',
+          backdropFilter: 'blur(18px)',
+          WebkitBackdropFilter: 'blur(18px)',
+          background: 'rgba(8, 9, 11, 0.86)',
+          borderBottomColor: '#1c1f26',
+        }
+      : {};
+
+  return (
+    <View style={[styles.bar, barBgWeb as object]}>
+
+      {/* Left: Logo */}
+      <View style={styles.logoWrap}>
+        <Text style={[styles.logoText, { fontFamily: MONO }]}>
+          <Text style={{ color: '#38bdf8' }}>J</Text>
+          <Text style={{ color: '#818cf8' }}>.</Text>
+          <Text style={{ color: '#38bdf8' }}>S</Text>
+        </Text>
+        <View style={styles.logoDivider} />
+        <Text style={[styles.logoSub, { fontFamily: MONO }]}>dev</Text>
+      </View>
+
+      {/* Center: Nav items — truly centered */}
+      <ScrollView
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        contentContainerStyle={styles.navItemsContainer}
+        style={styles.navScroll}
+      >
+        {navItems.map((item) => (
+          <NavItem
+            key={item.key}
+            sectionKey={item.key}
+            label={item.label}
+            active={activeSection === item.key}
+            onPress={() => onNavigate(item.key)}
+          />
+        ))}
+      </ScrollView>
+
+      {/* Right: Language flag tabs */}
+      <LangTabs />
+
+    </View>
+  );
+}
+
+// ─── Styles ───────────────────────────────────────────────────────────────────
+
 const styles = StyleSheet.create({
-  headerBar: {
-    position: 'absolute',
+  bar: {
     top: 0,
     left: 0,
     right: 0,
-    zIndex: 200,
+    zIndex: 500,
+    height: 54,
     flexDirection: 'row',
-    justifyContent: 'flex-end',
-    paddingHorizontal: spacing.lg,
-    paddingBottom: spacing.sm,
-  },
-  hamburger: {
-    width: 44,
-    height: 44,
-    justifyContent: 'center',
     alignItems: 'center',
-    gap: 6,
-    borderRadius: 10,
-    backgroundColor: 'rgba(20, 20, 28, 0.75)',
-    borderWidth: 1,
-    borderColor: colors.border,
+    backgroundColor: '#08090b',
+    borderBottomWidth: 1,
+    borderBottomColor: '#1c1f26',
   },
-  hamburgerPressed: {
-    opacity: 0.85,
-    backgroundColor: colors.surfaceLight,
+
+  /* Logo — left anchor */
+  logoWrap: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    paddingLeft: 24,
+    paddingRight: 16,
+    flexShrink: 0,
   },
-  line: {
-    width: 22,
+  logoText: {
+    fontSize: 17,
+    fontWeight: '700',
+    letterSpacing: 1,
+  },
+  logoDivider: {
+    width: 1,
+    height: 16,
+    backgroundColor: '#1c1f26',
+  },
+  logoSub: {
+    fontSize: 11,
+    color: '#38bdf870',
+    letterSpacing: 2,
+  },
+
+  /* Nav scroll — takes remaining space, centers content */
+  navScroll: {
+    flex: 1,
+  },
+  navItemsContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 2,
+    flexGrow: 1,
+    justifyContent: 'center',
+  },
+
+  /* Nav item */
+  navItem: {
+    paddingHorizontal: 13,
+    paddingVertical: 6,
+    alignItems: 'center',
+    position: 'relative',
+  },
+  navLabel: {
+    fontSize: 13,
+    fontWeight: '500',
+    letterSpacing: 0.2,
+  },
+
+  /* Active underline */
+  activeBar: {
+    position: 'absolute',
+    bottom: -1,
+    left: 10,
+    right: 10,
     height: 2,
     borderRadius: 1,
-    backgroundColor: colors.text,
+    backgroundColor: '#38bdf8',
   },
-  lineTop: {
-    transform: [{ translateY: 8 }, { rotate: '45deg' }],
+
+  /* ── Language Tabs ─────────────────────────────────────────────────────── */
+
+  tabsWrap: {
+    flexDirection: 'row',
+    borderWidth: 1,
+    borderColor: '#1c1f26',
+    borderRadius: 8,
+    overflow: 'hidden',
+    flexShrink: 0,
+    marginRight: 20,
+    marginLeft: 10,
   },
-  lineMiddle: {
-    opacity: 0,
-  },
-  lineBottom: {
-    transform: [{ translateY: -8 }, { rotate: '-45deg' }],
-  },
-  overlayPressable: {
-    ...StyleSheet.absoluteFill,
-  },
-  webBlurOverlay: {
-    ...StyleSheet.absoluteFill,
-    backgroundColor: 'rgba(11, 11, 15, 0.35)',
-    backdropFilter: 'blur(20px)',
-    WebkitBackdropFilter: 'blur(20px)',
-  } as object,
-  dimLayer: {
-    ...StyleSheet.absoluteFill,
-    backgroundColor: 'rgba(11, 11, 15, 0.45)',
-  },
-  dimLayerWeb: {
+  tab: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 5,
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    position: 'relative',
     backgroundColor: 'transparent',
   },
-  menuLayer: {
-    ...StyleSheet.absoluteFill,
-    justifyContent: 'center',
-    alignItems: 'center',
-    zIndex: 10,
+  tabActive: {
+    backgroundColor: '#13161b',
   },
-  menuCenter: {
-    alignItems: 'center',
-    gap: spacing.lg,
-    paddingHorizontal: spacing.xl,
+  tabSep: {
+    width: 1,
+    backgroundColor: '#1c1f26',
+    alignSelf: 'stretch',
   },
-  menuItem: {
-    paddingVertical: spacing.sm,
-    paddingHorizontal: spacing.xl,
-    borderRadius: 12,
+  tabFlag: {
+    fontSize: 14,
+    lineHeight: 18,
   },
-  menuItemPressed: {
-    backgroundColor: 'rgba(34, 211, 238, 0.12)',
-  },
-  menuItemText: {
-    fontSize: 28,
+  tabLabel: {
+    fontSize: 10,
     fontWeight: '700',
-    color: colors.text,
-    letterSpacing: 0.5,
-    textAlign: 'center',
+    letterSpacing: 1.5,
+  },
+  /* Bottom accent bar on active tab */
+  tabBar: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    height: 2,
+    backgroundColor: '#38bdf8',
   },
 });

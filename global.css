@@ -4,6 +4,10 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ── Hide native browser scrollbar (replaced by custom ScrollBar component) ── */
+*::-webkit-scrollbar { display: none; }
+* { scrollbar-width: none; }
+
 /* ── Theme tokens ───────────────────────────────────────────────────────────── */
 
 :root,

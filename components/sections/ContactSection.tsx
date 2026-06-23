@@ -4,12 +4,13 @@ import React, { useState } from 'react';
 import { Platform, Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { Section } from '@/components/layout/Section';
+import { useTranslations } from '@/context/AppConfigContext';
 import { portfolio } from '@/content/portfolio';
 
 // ─── Data ─────────────────────────────────────────────────────────────────────
 
 const { email, phone, linkedin, github } = portfolio.contact;
-const phoneHref = `tel:${phone.replace(/\s/g, '')}`;
+const phoneHref = `https://wa.me/${phone.replace(/[\s+]/g, '')}`;
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
@@ -40,6 +41,7 @@ const TRANSITION: object =
 // ─── Email CTA ────────────────────────────────────────────────────────────────
 
 function EmailButton() {
+  const t = useTranslations();
   const [hovered, setHovered] = useState(false);
 
   const hoverWeb: object =
@@ -57,7 +59,7 @@ function EmailButton() {
         style={[styles.btnPrimary, hoverWeb as object, TRANSITION as object]}
         accessibilityRole="link"
       >
-        <Text style={styles.btnPrimaryText}>Enviar e-mail</Text>
+        <Text style={styles.btnPrimaryText}>{t['contact_email']}</Text>
         <MaterialCommunityIcons name="arrow-top-right" size={16} color="#06222e" />
       </Pressable>
     </HoverableView>
@@ -67,6 +69,7 @@ function EmailButton() {
 // ─── Copy Email ───────────────────────────────────────────────────────────────
 
 function CopyEmailButton() {
+  const t = useTranslations();
   const [copied, setCopied] = useState(false);
   const [hovered, setHovered] = useState(false);
 
@@ -82,8 +85,8 @@ function CopyEmailButton() {
     }
   };
 
-  const iconColor = copied ? ACCENT : hovered ? ACCENT : '#cdd1d7';
-  const textColor = copied ? ACCENT : hovered ? ACCENT : '#cdd1d7';
+  const iconColor  = copied ? ACCENT : hovered ? ACCENT : '#cdd1d7';
+  const textColor  = copied ? ACCENT : hovered ? ACCENT : '#cdd1d7';
   const borderColor = hovered ? ACCENT + '55' : '#2b2f37';
 
   return (
@@ -102,7 +105,7 @@ function CopyEmailButton() {
           <Ionicons name="copy-outline" size={15} color={iconColor} />
         )}
         <Text style={[styles.btnSecondaryText, { color: textColor }]}>
-          {copied ? '✓ Copiado!' : 'copiar e-mail'}
+          {copied ? t['contact_copied'] : t['contact_copy']}
         </Text>
       </Pressable>
     </HoverableView>
@@ -124,7 +127,7 @@ function ChannelPill({
 
   const hoverStyle = {
     backgroundColor: hovered ? '#13161b' : '#101216',
-    borderColor: hovered ? ACCENT + '55' : '#1c1f26',
+    borderColor:     hovered ? ACCENT + '55' : '#1c1f26',
   };
   const transformWeb: object =
     hovered && Platform.OS === 'web' ? { transform: 'translateX(3px)' } : {};
@@ -149,6 +152,8 @@ function ChannelPill({
 // ─── Root ─────────────────────────────────────────────────────────────────────
 
 export function ContactSection({ sectionRef }: { sectionRef?: React.Ref<View> }) {
+  const t = useTranslations();
+
   const cardBgWeb: object =
     Platform.OS === 'web'
       ? { background: 'radial-gradient(120% 140% at 50% 0%, #0f151b 0%, #0b0d11 55%)' }
@@ -164,66 +169,78 @@ export function ContactSection({ sectionRef }: { sectionRef?: React.Ref<View> })
 
   return (
     <Section ref={sectionRef}>
-      <View
-        style={[styles.card, cardBgWeb as object]}
-      >
-        {/* Decorative radial glow */}
-        {Platform.OS === 'web' && (
-          <View
-            style={[
-              styles.glowBase,
-              {
-                background: 'radial-gradient(circle at 50% 0%, #38bdf820, transparent 70%)',
-                pointerEvents: 'none',
-              } as object,
-            ]}
-          />
-        )}
+      {/* Inner wrapper: card centered, footer pinned to bottom */}
+      <View style={styles.sectionInner}>
 
-        {/* Label */}
-        <Text style={[styles.label, { fontFamily: MONO }]}>CONTATO</Text>
+        {/* Card */}
+        <View style={[styles.card, cardBgWeb as object]}>
+          {/* Decorative radial glow */}
+          {Platform.OS === 'web' && (
+            <View
+              style={[
+                styles.glowBase,
+                {
+                  background: 'radial-gradient(circle at 50% 0%, #38bdf820, transparent 70%)',
+                  pointerEvents: 'none',
+                } as object,
+              ]}
+            />
+          )}
 
-        {/* Title */}
-        <Text style={[styles.title, titleWeb as object]}>
-          Vamos construir algo juntos?
-        </Text>
+          {/* Label */}
+          <Text style={[styles.label, { fontFamily: MONO }]}>{t['contact_label']}</Text>
 
-        {/* Subtitle */}
-        <Text style={[styles.subtitle, subtitleWeb as object]}>
-          Tem um projeto em mente ou uma vaga que combina comigo? Me chama — respondo rápido.
-        </Text>
+          {/* Title */}
+          <Text style={[styles.title, titleWeb as object]}>
+            {t['contact_title']}
+          </Text>
 
-        {/* CTA buttons */}
-        <View style={styles.ctaRow}>
-          <EmailButton />
-          <CopyEmailButton />
+          {/* Subtitle */}
+          <Text style={[styles.subtitle, subtitleWeb as object]}>
+            {t['contact_subtitle']}
+          </Text>
+
+          {/* CTA buttons */}
+          <View style={styles.ctaRow}>
+            <EmailButton />
+            <CopyEmailButton />
+          </View>
+
+          {/* Divider */}
+          <View style={styles.dividerRow}>
+            <View style={styles.dividerLine} />
+            <Text style={[styles.dividerLabel, { fontFamily: MONO }]}>{t['contact_or']}</Text>
+            <View style={styles.dividerLine} />
+          </View>
+
+          {/* Channel pills */}
+          <View style={styles.pillsRow}>
+            <ChannelPill
+              href={phoneHref}
+              label="WhatsApp"
+              icon={<MaterialCommunityIcons name="whatsapp" size={17} color="#25d366" />}
+            />
+            <ChannelPill
+              href={linkedin}
+              label="LinkedIn"
+              icon={<MaterialCommunityIcons name="linkedin" size={16} color={ACCENT} />}
+            />
+            <ChannelPill
+              href={github}
+              label="GitHub"
+              icon={<MaterialCommunityIcons name="github" size={16} color={ACCENT} />}
+            />
+          </View>
         </View>
 
-        {/* Divider */}
-        <View style={styles.dividerRow}>
-          <View style={styles.dividerLine} />
-          <Text style={[styles.dividerLabel, { fontFamily: MONO }]}>ou me encontre em</Text>
-          <View style={styles.dividerLine} />
+        {/* ── Footer — pinned to the bottom of the section ── */}
+        <View style={styles.footerBar}>
+          <View style={styles.footerDivider} />
+          <Text style={[styles.footerText, { fontFamily: MONO }]}>
+            © 2026 Jonathan Fernando. Todos os direitos reservados.
+          </Text>
         </View>
 
-        {/* Channel pills */}
-        <View style={styles.pillsRow}>
-          <ChannelPill
-            href={phoneHref}
-            label={phone}
-            icon={<Ionicons name="call-outline" size={16} color={ACCENT} />}
-          />
-          <ChannelPill
-            href={linkedin}
-            label="LinkedIn"
-            icon={<MaterialCommunityIcons name="linkedin" size={16} color={ACCENT} />}
-          />
-          <ChannelPill
-            href={github}
-            label="GitHub"
-            icon={<MaterialCommunityIcons name="github" size={16} color={ACCENT} />}
-          />
-        </View>
       </View>
     </Section>
   );
@@ -355,6 +372,36 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     justifyContent: 'center',
     gap: 10,
+  },
+
+  /* Section inner — card centered, footer pinned to bottom */
+  sectionInner: {
+    flex:           1,
+    width:          '100%',
+    justifyContent: 'center',
+    alignItems:     'center',
+    position:       'relative',
+  },
+
+  /* Footer bar — absolute at bottom of section */
+  footerBar: {
+    position:   'absolute',
+    bottom:     20,
+    left:       0,
+    right:      0,
+    alignItems: 'center',
+    gap:        10,
+  },
+  footerDivider: {
+    width:           80,
+    height:          1,
+    backgroundColor: '#1c1f26',
+  },
+  footerText: {
+    fontSize:      11,
+    color:         '#3a3f4a',
+    letterSpacing: 0.4,
+    textAlign:     'center',
   },
 
   /* Pill */

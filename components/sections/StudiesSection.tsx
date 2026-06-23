@@ -3,6 +3,7 @@ import React from 'react';
 import { Platform, StyleSheet, Text, View } from 'react-native';
 
 import { Section } from '@/components/layout/Section';
+import { useTranslations } from '@/context/AppConfigContext';
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
@@ -21,6 +22,7 @@ const SPACE = Platform.select({
 // ─── Section Header ───────────────────────────────────────────────────────────
 
 function SectionHeader() {
+  const t = useTranslations();
   const ruleWeb: object =
     Platform.OS === 'web'
       ? { background: 'linear-gradient(to right, #23262d, transparent)' }
@@ -28,7 +30,7 @@ function SectionHeader() {
 
   return (
     <View style={styles.headerRow}>
-      <Text style={[styles.headerLabel, { fontFamily: MONO }]}>ESTUDOS & ARTIGOS</Text>
+      <Text style={[styles.headerLabel, { fontFamily: MONO }]}>{t['section_studies']}</Text>
       <View style={[styles.headerRule, ruleWeb]} />
     </View>
   );
@@ -37,6 +39,7 @@ function SectionHeader() {
 // ─── Placeholder ──────────────────────────────────────────────────────────────
 
 function Placeholder() {
+  const t = useTranslations();
   const cardBgWeb: object =
     Platform.OS === 'web'
       ? {
@@ -62,10 +65,10 @@ function Placeholder() {
 
       {/* Text */}
       <Text style={[styles.placeholderTitle, { fontFamily: SPACE }]}>
-        Em Desenvolvimento
+        {t['placeholder_title']}
       </Text>
       <Text style={[styles.placeholderSub, { fontFamily: MONO }]}>
-        Breve estarão disponíveis!
+        {t['placeholder_subtitle']}
       </Text>
 
       {/* Dashed border accent */}

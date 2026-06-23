@@ -6,11 +6,13 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { StyleSheet } from 'react-native';
 
 import { LikesProvider } from '@/context/LikesContext';
+import { AppConfigProvider } from '@/context/AppConfigContext';
 import { colors } from '@/constants/theme';
 
 export default function RootLayout() {
   return (
     <GestureHandlerRootView style={styles.root}>
+      <AppConfigProvider>
       <LikesProvider>
         <StatusBar style="light" />
         <Stack
@@ -32,6 +34,7 @@ export default function RootLayout() {
           />
         </Stack>
       </LikesProvider>
+      </AppConfigProvider>
     </GestureHandlerRootView>
   );
 }

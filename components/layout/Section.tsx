@@ -57,6 +57,7 @@ const styles = StyleSheet.create({
   },
   sectionWeb: {
     scrollSnapAlign: 'start',
+    paddingTop: 54 + spacing.xl, // extra top offset for fixed nav (54px)
   } as object,
   header: {
     marginBottom: spacing.lg,
