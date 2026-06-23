@@ -1,9 +1,9 @@
-import { MaterialCommunityIcons } from '@expo/vector-icons';
 import React from 'react';
-import { Platform, StyleSheet, Text, View } from 'react-native';
+import { Linking, Platform, Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { Section } from '@/components/layout/Section';
 import { useTranslations } from '@/context/AppConfigContext';
+import { studies } from '@/content/studies';
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
@@ -36,10 +36,11 @@ function SectionHeader() {
   );
 }
 
-// ─── Placeholder ──────────────────────────────────────────────────────────────
+// ─── Study Card ───────────────────────────────────────────────────────────────
 
-function Placeholder() {
-  const t = useTranslations();
+function StudyCard({ item }: { item: (typeof studies)[number] }) {
+  const transitionWeb: object =
+    Platform.OS === 'web' ? { transition: 'border-color 0.18s ease, transform 0.18s ease' } : {};
   const cardBgWeb: object =
     Platform.OS === 'web'
       ? {
@@ -48,36 +49,23 @@ function Placeholder() {
         }
       : {};
 
-  const glowWeb: object =
-    Platform.OS === 'web'
-      ? { background: 'radial-gradient(circle at 50% 0%, #a78bfa10, transparent 70%)' }
-      : {};
-
   return (
-    <View style={[styles.placeholderCard, cardBgWeb as object]}>
-      {/* Decorative glow */}
-      <View style={[styles.glow, glowWeb as object]} pointerEvents="none" />
-
-      {/* Icon */}
-      <View style={styles.iconWrap}>
-        <MaterialCommunityIcons name="book-open-page-variant-outline" size={36} color="#a78bfa40" />
+    <Pressable
+      style={({ pressed }) => [
+        styles.studyCard,
+        cardBgWeb as object,
+        transitionWeb as object,
+        pressed && styles.studyCardPressed,
+      ]}
+      onPress={() => Linking.openURL(item.url)}
+    >
+      <View style={styles.studyHeader}>
+        <Text style={[styles.studyType, { fontFamily: MONO }]}>{item.type}</Text>
+        <Text style={styles.studyArrow}>↗</Text>
       </View>
-
-      {/* Text */}
-      <Text style={[styles.placeholderTitle, { fontFamily: SPACE }]}>
-        {t['placeholder_title']}
-      </Text>
-      <Text style={[styles.placeholderSub, { fontFamily: MONO }]}>
-        {t['placeholder_subtitle']}
-      </Text>
-
-      {/* Dashed border accent */}
-      <View style={styles.dashedRow}>
-        {[...Array(5)].map((_, i) => (
-          <View key={i} style={[styles.dash, i === 2 && styles.dashAccent]} />
-        ))}
-      </View>
-    </View>
+      <Text style={[styles.studyTitle, { fontFamily: SPACE }]}>{item.title}</Text>
+      <Text style={styles.studyDescription}>{item.description}</Text>
+    </Pressable>
   );
 }
 
@@ -87,7 +75,11 @@ export function StudiesSection({ sectionRef }: { sectionRef?: React.Ref<View> })
   return (
     <Section ref={sectionRef} style={styles.sectionOverride as object}>
       <SectionHeader />
-      <Placeholder />
+      <View style={styles.grid}>
+        {studies.map((item) => (
+          <StudyCard key={item.id} item={item} />
+        ))}
+      </View>
     </Section>
   );
 }
@@ -118,65 +110,52 @@ const styles = StyleSheet.create({
     backgroundColor: '#23262d',
   },
 
-  /* Placeholder card */
-  placeholderCard: {
+  grid: {
     width: '100%',
-    maxWidth: 560,
-    alignSelf: 'center',
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 16,
+  },
+  studyCard: {
+    width: '100%',
+    minWidth: 220,
+    flexBasis: 260,
+    flexGrow: 1,
     backgroundColor: '#0e1014',
     borderWidth: 1,
     borderColor: '#1c1f26',
-    borderRadius: 20,
-    paddingVertical: 56,
-    paddingHorizontal: 32,
-    alignItems: 'center',
-    gap: 12,
-    overflow: 'hidden',
+    borderRadius: 12,
+    padding: 18,
+    gap: 10,
   },
-  glow: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    height: 120,
+  studyCardPressed: {
+    opacity: 0.86,
+    transform: [{ scale: 0.99 }],
   },
-
-  iconWrap: {
-    width: 72,
-    height: 72,
-    borderRadius: 20,
-    backgroundColor: '#a78bfa0a',
-    borderWidth: 1,
-    borderColor: '#a78bfa20',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: 8,
-  },
-
-  placeholderTitle: {
-    fontSize: 20,
-    fontWeight: '600',
-    color: '#e8eaed',
-    letterSpacing: -0.2,
-  },
-  placeholderSub: {
-    fontSize: 12.5,
-    color: '#4b5159',
-    letterSpacing: 1,
-  },
-
-  dashedRow: {
+  studyHeader: {
     flexDirection: 'row',
-    gap: 6,
-    marginTop: 24,
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
-  dash: {
-    width: 24,
-    height: 2,
-    borderRadius: 1,
-    backgroundColor: '#1c1f26',
+  studyType: {
+    color: '#a78bfa',
+    fontSize: 11,
+    fontWeight: '600',
+    letterSpacing: 1,
+    textTransform: 'uppercase',
   },
-  dashAccent: {
-    backgroundColor: '#a78bfa40',
+  studyArrow: {
+    color: '#a78bfa',
+    fontSize: 16,
+  },
+  studyTitle: {
+    color: '#e8eaed',
+    fontSize: 17,
+    fontWeight: '700',
+  },
+  studyDescription: {
+    color: '#9ca3af',
+    fontSize: 14,
+    lineHeight: 20,
   },
 });

@@ -199,8 +199,8 @@ function Node({ accent, pulse }: { accent: string; pulse: boolean }) {
     if (!pulse) return;
     const loop = Animated.loop(
       Animated.sequence([
-        Animated.timing(opacity, { toValue: 0.35, duration: 900, useNativeDriver: true }),
-        Animated.timing(opacity, { toValue: 1,    duration: 900, useNativeDriver: true }),
+        Animated.timing(opacity, { toValue: 0.35, duration: 900, useNativeDriver: Platform.OS !== 'web' }),
+        Animated.timing(opacity, { toValue: 1,    duration: 900, useNativeDriver: Platform.OS !== 'web' }),
       ]),
     );
     loop.start();

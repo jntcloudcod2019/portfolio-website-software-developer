@@ -56,8 +56,8 @@ function OnlineBadge() {
   useEffect(() => {
     const loop = Animated.loop(
       Animated.sequence([
-        Animated.timing(pulse, { toValue: 0.4, duration: 800, useNativeDriver: true }),
-        Animated.timing(pulse, { toValue: 1, duration: 800, useNativeDriver: true }),
+        Animated.timing(pulse, { toValue: 0.4, duration: 800, useNativeDriver: Platform.OS !== 'web' }),
+        Animated.timing(pulse, { toValue: 1, duration: 800, useNativeDriver: Platform.OS !== 'web' }),
       ]),
     );
     loop.start();
@@ -101,8 +101,8 @@ function BlinkingCursor() {
   useEffect(() => {
     const loop = Animated.loop(
       Animated.sequence([
-        Animated.timing(blink, { toValue: 0, duration: 530, useNativeDriver: true }),
-        Animated.timing(blink, { toValue: 1, duration: 530, useNativeDriver: true }),
+        Animated.timing(blink, { toValue: 0, duration: 530, useNativeDriver: Platform.OS !== 'web' }),
+        Animated.timing(blink, { toValue: 1, duration: 530, useNativeDriver: Platform.OS !== 'web' }),
       ]),
     );
     loop.start();
