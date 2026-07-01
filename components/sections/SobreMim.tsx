@@ -9,7 +9,7 @@ import {
   View,
 } from 'react-native';
 
-import { useTranslations } from '@/context/AppConfigContext';
+import { useTranslation } from 'react-i18next';
 
 const profilePhoto = require('../../assets/profile-photo.jpeg') as number;
 
@@ -126,17 +126,17 @@ function BlinkingCursor() {
 // ─── CodeColumn ──────────────────────────────────────────────────────────────
 
 function CodeColumn() {
-  const t = useTranslations();
+  const { t } = useTranslation();
   const bioWeb: object =
     Platform.OS === 'web' ? { fontFamily: SPACE, fontWeight: '300' } : {};
 
   const kvRows = [
     { key: 'name',    value: 'Jonathan F. Silva' },
-    { key: 'role',    value: t['about_role'] },
-    { key: 'focus',   value: t['about_focus'] },
-    { key: 'domains', value: t['about_domains'] },
-    { key: 'stack',   value: t['about_stack'] },
-    { key: 'local',   value: t['about_local'] },
+    { key: 'role',    value: t('about_role') },
+    { key: 'focus',   value: t('about_focus') },
+    { key: 'domains', value: t('about_domains') },
+    { key: 'stack',   value: t('about_stack') },
+    { key: 'local',   value: t('about_local') },
   ];
 
   return (
@@ -170,7 +170,7 @@ function CodeColumn() {
 
       {/* Bio */}
       <View style={styles.bioBorder}>
-        <Text style={[styles.bioText, bioWeb as object]}>{t['about_bio']}</Text>
+        <Text style={[styles.bioText, bioWeb as object]}>{t('about_bio')}</Text>
       </View>
 
       {/* Blinking cursor */}

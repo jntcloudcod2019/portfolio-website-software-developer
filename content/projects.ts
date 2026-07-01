@@ -6,38 +6,30 @@ export type Project = {
   imageUrl: string;
   videoUrl: string;
   stack: string[];
+  componentId?: string;
 };
 
 export const projects: Project[] = [
   {
-    id: 'api-evora',
-    name: 'API Évora',
-    shortDescription: 'API REST com arquitetura em camadas e mensageria.',
+    id: 'conversor-moedas',
+    name: 'Conversor de Moedas',
+    shortDescription: 'Conversor em tempo real com a Free Currency API.',
     description:
-      'API desenvolvida para gestão de portfólio e integrações. Utiliza padrões de clean architecture, Entity Framework, filas com RabbitMQ e deploy em cloud. O projeto demonstra boas práticas de versionamento, testes e observabilidade.',
-    imageUrl: 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=600&h=400&fit=crop',
-    videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
-    stack: ['C#', 'Entity Framework', 'RabbitMQ', 'PostgreSQL', 'Docker'],
+      'Conversor de moedas que consome a Free Currency API para obter taxas de câmbio atualizadas em tempo real.',
+    imageUrl: 'https://images.unsplash.com/photo-1580519542036-c47de6196ba5?w=600&h=400&fit=crop',
+    videoUrl: '',
+    stack: ['React Native', 'TypeScript', 'Expo', 'Free Currency API'],
+    componentId: 'conversor-moedas',
   },
   {
-    id: 'portfolio-app',
-    name: 'Portfolio App',
-    shortDescription: 'App multiplataforma com Expo (web + mobile).',
+    id: 'lambda-pregiato',
+    name: 'Lambda.Pregiato',
+    shortDescription: 'Integrador assíncrono de contratos digitais em C#/.NET 8 com RabbitMQ e Authentique.',
     description:
-      'Protótipo de portfólio profissional com navegação por seções, carrossel de tecnologias na web e páginas de detalhe de projetos com contador de likes em memória.',
-    imageUrl: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=600&h=400&fit=crop',
-    videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4',
-    stack: ['React Native', 'Expo', 'TypeScript'],
-  },
-  {
-    id: 'observability-stack',
-    name: 'Observability Stack',
-    shortDescription: 'Monitoramento com Grafana, Datadog e MinIO.',
-    description:
-      'Stack de observabilidade para métricas, logs e armazenamento de objetos. Integração com dashboards Grafana, alertas e pipelines de dados em ambientes AWS e Azure.',
-    imageUrl: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=600&h=400&fit=crop',
-    videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4',
-    stack: ['Grafana', 'Datadog', 'MinIO', 'AWS', 'Docker'],
+      'Integrador assíncrono de contratos digitais — consome filas RabbitMQ, busca contratos em PostgreSQL, converte PDFs e aciona a API Authentique para assinatura eletrônica via WhatsApp.',
+    imageUrl: 'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=600&h=400&fit=crop',
+    videoUrl: '',
+    stack: ['C#', '.NET 8', 'RabbitMQ', 'PostgreSQL', 'EF Core', 'Docker'],
   },
 ];
 

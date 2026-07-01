@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import { Platform, Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { Section } from '@/components/layout/Section';
-import { useTranslations } from '@/context/AppConfigContext';
+import { useTranslation } from 'react-i18next';
 import { portfolio } from '@/content/portfolio';
 
 // ─── Data ─────────────────────────────────────────────────────────────────────
@@ -41,7 +41,7 @@ const TRANSITION: object =
 // ─── Email CTA ────────────────────────────────────────────────────────────────
 
 function EmailButton() {
-  const t = useTranslations();
+  const { t } = useTranslation();
   const [hovered, setHovered] = useState(false);
 
   const hoverWeb: object =
@@ -59,7 +59,7 @@ function EmailButton() {
         style={[styles.btnPrimary, hoverWeb as object, TRANSITION as object]}
         accessibilityRole="link"
       >
-        <Text style={styles.btnPrimaryText}>{t['contact_email']}</Text>
+        <Text style={styles.btnPrimaryText}>{t('contact_email')}</Text>
         <MaterialCommunityIcons name="arrow-top-right" size={16} color="#06222e" />
       </Pressable>
     </HoverableView>
@@ -69,7 +69,7 @@ function EmailButton() {
 // ─── Copy Email ───────────────────────────────────────────────────────────────
 
 function CopyEmailButton() {
-  const t = useTranslations();
+  const { t } = useTranslation();
   const [copied, setCopied] = useState(false);
   const [hovered, setHovered] = useState(false);
 
@@ -105,7 +105,7 @@ function CopyEmailButton() {
           <Ionicons name="copy-outline" size={15} color={iconColor} />
         )}
         <Text style={[styles.btnSecondaryText, { color: textColor }]}>
-          {copied ? t['contact_copied'] : t['contact_copy']}
+          {copied ? t('contact_copied') : t('contact_copy')}
         </Text>
       </Pressable>
     </HoverableView>
@@ -152,7 +152,7 @@ function ChannelPill({
 // ─── Root ─────────────────────────────────────────────────────────────────────
 
 export function ContactSection({ sectionRef }: { sectionRef?: React.Ref<View> }) {
-  const t = useTranslations();
+  const { t } = useTranslation();
 
   const cardBgWeb: object =
     Platform.OS === 'web'
@@ -188,16 +188,16 @@ export function ContactSection({ sectionRef }: { sectionRef?: React.Ref<View> })
           )}
 
           {/* Label */}
-          <Text style={[styles.label, { fontFamily: MONO }]}>{t['contact_label']}</Text>
+          <Text style={[styles.label, { fontFamily: MONO }]}>{t('contact_label')}</Text>
 
           {/* Title */}
           <Text style={[styles.title, titleWeb as object]}>
-            {t['contact_title']}
+            {t('contact_title')}
           </Text>
 
           {/* Subtitle */}
           <Text style={[styles.subtitle, subtitleWeb as object]}>
-            {t['contact_subtitle']}
+            {t('contact_subtitle')}
           </Text>
 
           {/* CTA buttons */}
@@ -209,7 +209,7 @@ export function ContactSection({ sectionRef }: { sectionRef?: React.Ref<View> })
           {/* Divider */}
           <View style={styles.dividerRow}>
             <View style={styles.dividerLine} />
-            <Text style={[styles.dividerLabel, { fontFamily: MONO }]}>{t['contact_or']}</Text>
+            <Text style={[styles.dividerLabel, { fontFamily: MONO }]}>{t('contact_or')}</Text>
             <View style={styles.dividerLine} />
           </View>
 

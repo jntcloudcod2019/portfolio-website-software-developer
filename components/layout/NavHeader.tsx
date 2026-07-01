@@ -11,8 +11,9 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
-import { useAppConfig, useTranslations } from '@/context/AppConfigContext';
-import type { Lang } from '@/constants/i18n';
+import { useTranslation } from 'react-i18next';
+
+import { useI18n } from '@/context/I18nProvider';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -139,18 +140,18 @@ function NotificationBell() {
 
 // ─── LangTabs ────────────────────────────────────────────────────────────────
 
-const LANG_TABS: { code: Lang; flag: string; label: string }[] = [
+const LANG_TABS: { code: string; flag: string; label: string }[] = [
   { code: 'pt', flag: '🇧🇷', label: 'PT' },
   { code: 'en', flag: '🇺🇸', label: 'EN' },
 ];
 
 function LangTabs() {
-  const { lang, setLang } = useAppConfig();
+  const { currentLanguage, changeLanguage } = useI18n();
 
   return (
     <View style={styles.tabsWrap}>
       {LANG_TABS.map((tab, i) => {
-        const active = lang === tab.code;
+        const active = currentLanguage === tab.code;
         const tabBgWeb: object =
           Platform.OS === 'web' ? { transition: 'background-color 0.18s ease' } : {};
         const tabBarWeb: object =
@@ -166,7 +167,7 @@ function LangTabs() {
           <React.Fragment key={tab.code}>
             {i > 0 && <View style={styles.tabSep} />}
             <Pressable
-              onPress={() => setLang(tab.code)}
+              onPress={() => changeLanguage(tab.code)}
               style={[styles.tab, active && styles.tabActive, tabBgWeb as object]}
               accessibilityLabel={tab.code === 'pt' ? 'Português' : 'English'}
             >
@@ -404,7 +405,7 @@ function MobileDrawerNative({
 // ─── Root ─────────────────────────────────────────────────────────────────────
 
 export function NavHeader({ activeSection, onNavigate }: NavHeaderProps) {
-  const t         = useTranslations();
+  const { t } = useTranslation();
   const { width } = useWindowDimensions();
   const isMobile  = width < MOBILE_BREAKPOINT;
 
@@ -439,12 +440,12 @@ export function NavHeader({ activeSection, onNavigate }: NavHeaderProps) {
   }, [drawerOpen, drawerAnim]);
 
   const navItems: { key: SectionKey; label: string }[] = [
-    { key: 'about',      label: t['nav_home'] },
-    { key: 'experience', label: t['nav_experience'] },
-    { key: 'projects',   label: t['nav_projects'] },
-    { key: 'studies',    label: t['nav_studies'] },
-    { key: 'skills',     label: t['nav_skills'] },
-    { key: 'contact',    label: t['nav_contact'] },
+    { key: 'about',      label: t('nav_home') },
+    { key: 'experience', label: t('nav_experience') },
+    { key: 'projects',   label: t('nav_projects') },
+    { key: 'studies',    label: t('nav_studies') },
+    { key: 'skills',     label: t('nav_skills') },
+    { key: 'contact',    label: t('nav_contact') },
   ];
 
   const handleNavigate = (key: SectionKey) => {

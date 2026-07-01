@@ -2,7 +2,7 @@ import React from 'react';
 import { Linking, Platform, Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { Section } from '@/components/layout/Section';
-import { useTranslations } from '@/context/AppConfigContext';
+import { useTranslation } from 'react-i18next';
 import { studies } from '@/content/studies';
 
 // ─── Constants ────────────────────────────────────────────────────────────────
@@ -22,7 +22,7 @@ const SPACE = Platform.select({
 // ─── Section Header ───────────────────────────────────────────────────────────
 
 function SectionHeader() {
-  const t = useTranslations();
+  const { t } = useTranslation();
   const ruleWeb: object =
     Platform.OS === 'web'
       ? { background: 'linear-gradient(to right, #23262d, transparent)' }
@@ -30,7 +30,7 @@ function SectionHeader() {
 
   return (
     <View style={styles.headerRow}>
-      <Text style={[styles.headerLabel, { fontFamily: MONO }]}>{t['section_studies']}</Text>
+      <Text style={[styles.headerLabel, { fontFamily: MONO }]}>{t('section_studies')}</Text>
       <View style={[styles.headerRule, ruleWeb]} />
     </View>
   );

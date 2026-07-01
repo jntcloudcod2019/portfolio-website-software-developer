@@ -19,47 +19,54 @@ export default function AllProjectsScreen() {
   const isWide = width > 768;
 
   return (
-    <ScrollView style={styles.scroll} contentContainerStyle={styles.content}>
-      <Text style={styles.heading}>Todos os Projetos</Text>
-      <Text style={styles.subheading}>
-        {projects.length} projetos disponíveis
-      </Text>
-
-      <View style={[styles.grid, isWide && styles.gridWide]}>
-        {projects.map((project) => (
-          <Pressable
-            key={project.id}
-            style={({ pressed }) => [
-              styles.card,
-              isWide && styles.cardWide,
-              pressed && styles.cardPressed,
-            ]}
-            onPress={() => router.push(`/project/${project.id}`)}
-          >
-            <Image
-              source={{ uri: project.imageUrl }}
-              style={styles.image}
-              resizeMode="cover"
-            />
-            <View style={styles.cardBody}>
-              <Text style={styles.cardTitle}>{project.name}</Text>
-              <Text style={styles.cardDescription}>{project.shortDescription}</Text>
-              <View style={styles.stackRow}>
-                {project.stack.map((tech) => (
-                  <View key={tech} style={styles.chip}>
-                    <Text style={styles.chipText}>{tech}</Text>
-                  </View>
-                ))}
+    <View style={styles.screen}>
+      <ScrollView style={styles.scroll} contentContainerStyle={styles.content}>
+        <Text style={styles.heading}>Todos os Projetos</Text>
+        <Text style={styles.subheading}>
+          {projects.length} projetos disponíveis
+        </Text>
+  
+        <View style={[styles.grid, isWide && styles.gridWide]}>
+          {projects.map((project) => (
+            <Pressable
+              key={project.id}
+              style={({ pressed }) => [
+                styles.card,
+                isWide && styles.cardWide,
+                pressed && styles.cardPressed,
+              ]}
+              onPress={() => router.push(`/project/${project.id}`)}
+            >
+              <Image
+                source={{ uri: project.imageUrl }}
+                style={styles.image}
+                resizeMode="cover"
+              />
+              <View style={styles.cardBody}>
+                <Text style={styles.cardTitle}>{project.name}</Text>
+                <Text style={styles.cardDescription}>{project.shortDescription}</Text>
+                <View style={styles.stackRow}>
+                  {project.stack.map((tech) => (
+                    <View key={tech} style={styles.chip}>
+                      <Text style={styles.chipText}>{tech}</Text>
+                    </View>
+                  ))}
+                </View>
               </View>
-            </View>
-          </Pressable>
-        ))}
-      </View>
-    </ScrollView>
+            </Pressable>
+          ))}
+        </View>
+      </ScrollView>
+    </View>
   );
 }
 
+
 const styles = StyleSheet.create({
+  screen: {
+    flex: 1,
+    backgroundColor: colors.background,
+  },
   scroll: {
     flex: 1,
     backgroundColor: colors.background,

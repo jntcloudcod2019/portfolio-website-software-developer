@@ -1,6 +1,7 @@
-import { useLocalSearchParams } from 'expo-router';
+import { useLocalSearchParams, useRouter } from 'expo-router';
 import React from 'react';
 import {
+  Platform,
   Pressable,
   ScrollView,
   StyleSheet,
@@ -9,12 +10,21 @@ import {
 } from 'react-native';
 
 import { ProjectVideo } from '@/components/project/ProjectVideo';
+import { projectComponents } from '@/components/projetos';
 import { colors, spacing } from '@/constants/theme';
 import { getProjectById } from '@/content/projects';
 import { useLikes } from '@/context/LikesContext';
 
+const MONO = Platform.select({
+  web: '"JetBrains Mono", "Courier New", monospace',
+  ios: 'Courier',
+  android: 'monospace',
+  default: 'monospace',
+});
+
 export default function ProjectDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
+  const router = useRouter();
   const project = getProjectById(id ?? '');
   const { getLikes, incrementLike } = useLikes();
 
@@ -27,36 +37,55 @@ export default function ProjectDetailScreen() {
   }
 
   const likes = getLikes(project.id);
+  const InteractiveComponent = projectComponents[project.componentId ?? ''];
 
   return (
-    <ScrollView style={styles.scroll} contentContainerStyle={styles.content}>
-      <Text style={styles.title}>{project.name}</Text>
-
-      <ProjectVideo uri={project.videoUrl} />
-
-      <Text style={styles.description}>{project.description}</Text>
-
-      <View style={styles.stackRow}>
-        {project.stack.map((tech) => (
-          <View key={tech} style={styles.stackChip}>
-            <Text style={styles.stackText}>{tech}</Text>
-          </View>
-        ))}
-      </View>
-
-      <Pressable
-        style={({ pressed }) => [styles.likeButton, pressed && styles.likeButtonPressed]}
-        onPress={() => incrementLike(project.id)}
-      >
-        <Text style={styles.likeIcon}>♥</Text>
-        <Text style={styles.likeLabel}>Curtir</Text>
-        <Text style={styles.likeCount}>{likes}</Text>
-      </Pressable>
-    </ScrollView>
+    <View style={styles.screen}>
+      <ScrollView style={styles.scroll} contentContainerStyle={styles.content}>
+        {Platform.OS === 'web' && (
+          <Pressable onPress={() => router.back()} style={styles.backWeb}>
+            <Text style={[styles.backWebText, { fontFamily: MONO }]}>{"<"}</Text>
+          </Pressable>
+        )}
+        <Text style={styles.title}>{project.name}</Text>
+  
+        {InteractiveComponent ? (
+          <InteractiveComponent />
+        ) : (
+          <ProjectVideo uri={project.videoUrl} />
+        )}
+  
+        <Text style={[styles.description, { fontFamily: MONO }]}>{project.description}</Text>
+  
+        <View style={styles.stackRow}>
+          {project.stack.map((tech) => (
+            <View key={tech} style={styles.stackChip}>
+              <Text style={styles.stackText}>{tech}</Text>
+            </View>
+          ))}
+        </View>
+  
+        {!project.componentId && (
+          <Pressable
+            style={({ pressed }) => [styles.likeButton, pressed && styles.likeButtonPressed]}
+            onPress={() => incrementLike(project.id)}
+          >
+            <Text style={styles.likeIcon}>♥</Text>
+            <Text style={styles.likeLabel}>Curtir</Text>
+            <Text style={styles.likeCount}>{likes}</Text>
+          </Pressable>
+        )}
+      </ScrollView>
+    </View>
   );
 }
 
+
 const styles = StyleSheet.create({
+  screen: {
+    flex: 1,
+    backgroundColor: colors.background,
+  },
   scroll: {
     flex: 1,
     backgroundColor: colors.background,
@@ -80,12 +109,24 @@ const styles = StyleSheet.create({
     fontWeight: '800',
     color: colors.text,
     marginBottom: spacing.md,
+    textAlign: 'center',
+  },
+  backWeb: {
+    alignSelf: 'flex-start',
+    marginBottom: spacing.sm,
+    paddingVertical: spacing.xs,
+  },
+  backWebText: {
+    fontSize: 22,
+    color: colors.text,
+    fontWeight: '600',
   },
   description: {
-    fontSize: 15,
-    lineHeight: 24,
+    fontSize: 14,
+    lineHeight: 22,
     color: colors.textMuted,
     marginBottom: spacing.lg,
+    marginTop: spacing.sm,
   },
   stackRow: {
     flexDirection: 'row',

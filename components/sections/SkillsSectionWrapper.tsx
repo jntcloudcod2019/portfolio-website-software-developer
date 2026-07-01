@@ -4,15 +4,15 @@ import { StyleSheet, View } from 'react-native';
 import { Section } from '@/components/layout/Section';
 import { MapaDeCompetencias } from '@/components/skills/MapaDeCompetencias';
 import SkillsSection from '@/components/skills/SkillsSection';
-import { useTranslations } from '@/context/AppConfigContext';
+import { useTranslation } from 'react-i18next';
 
 export function SkillsSectionWrapper({ sectionRef }: { sectionRef?: React.Ref<View> }) {
-  const t = useTranslations();
+  const { t } = useTranslation();
   return (
     <Section
       ref={sectionRef}
-      title={t['section_skills']}
-      subtitle={t['section_skills_sub']}
+      title={t('section_skills')}
+      subtitle={t('section_skills_sub')}
       style={styles.sectionOverride as object}
     >
       <View style={styles.wrapper}>

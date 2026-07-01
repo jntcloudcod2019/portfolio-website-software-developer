@@ -3,7 +3,7 @@ import { Platform, StyleSheet, Text, View } from 'react-native';
 
 import { Section } from '@/components/layout/Section';
 import { ProjectCard } from '@/components/projects/ProjectCard';
-import { useTranslations } from '@/context/AppConfigContext';
+import { useTranslation } from 'react-i18next';
 import { projects } from '@/content/projects';
 
 // ─── Constants ────────────────────────────────────────────────────────────────
@@ -18,7 +18,7 @@ const MONO = Platform.select({
 // ─── Section Header ───────────────────────────────────────────────────────────
 
 function SectionHeader() {
-  const t = useTranslations();
+  const { t } = useTranslation();
   const ruleWeb: object =
     Platform.OS === 'web'
       ? { background: 'linear-gradient(to right, #23262d, transparent)' }
@@ -26,7 +26,7 @@ function SectionHeader() {
 
   return (
     <View style={styles.headerRow}>
-      <Text style={[styles.headerLabel, { fontFamily: MONO }]}>{t['section_projects']}</Text>
+      <Text style={[styles.headerLabel, { fontFamily: MONO }]}>{t('section_projects')}</Text>
       <View style={[styles.headerRule, ruleWeb]} />
     </View>
   );

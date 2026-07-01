@@ -8,7 +8,8 @@ import {
 } from 'react-native';
 
 import { Section } from '@/components/layout/Section';
-import { useAppConfig, useTranslations } from '@/context/AppConfigContext';
+import { useTranslation } from 'react-i18next';
+import { useI18n } from '@/context/I18nProvider';
 
 // ─── Types & Data ─────────────────────────────────────────────────────────────
 
@@ -242,7 +243,7 @@ function StackChip({ label }: { label: string }) {
 // ─── Section Header ───────────────────────────────────────────────────────────
 
 function SectionHeader() {
-  const t = useTranslations();
+  const { t } = useTranslation();
   const leftWeb: object =
     Platform.OS === 'web' ? { background: 'linear-gradient(to right, transparent, #374151)' } : {};
   const rightWeb: object =
@@ -251,7 +252,7 @@ function SectionHeader() {
   return (
     <View style={styles.headerRow}>
       <View style={[styles.headerLine, leftWeb]} />
-      <Text style={[styles.headerText, { fontFamily: MONO }]}>{t['section_experience']}</Text>
+      <Text style={[styles.headerText, { fontFamily: MONO }]}>{t('section_experience')}</Text>
       <View style={[styles.headerLine, rightWeb]} />
     </View>
   );
@@ -261,9 +262,9 @@ function SectionHeader() {
 
 function TimelineItem({ item, isLast }: { item: Experiencia; isLast: boolean }) {
   const [hovered, setHovered] = useState(false);
-  const { lang } = useAppConfig();
+  const { currentLanguage } = useI18n();
 
-  const isEn      = lang === 'en';
+  const isEn      = currentLanguage === 'en';
   const role      = isEn ? (item.roleEn    ?? item.role)    : item.role;
   const type      = isEn ? (item.typeEn    ?? item.type)    : item.type;
   const summary   = isEn ? item.summaryEn  : item.summary;
