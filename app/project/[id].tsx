@@ -12,7 +12,7 @@ import {
 import { ProjectVideo } from '@/components/project/ProjectVideo';
 import { projectComponents } from '@/components/projetos';
 import { colors, spacing } from '@/constants/theme';
-import { getProjectById } from '@/content/projects';
+import { useLocalizedProject } from '@/hooks/useLocalizedContent';
 import { useLikes } from '@/context/LikesContext';
 
 const MONO = Platform.select({
@@ -25,7 +25,7 @@ const MONO = Platform.select({
 export default function ProjectDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const router = useRouter();
-  const project = getProjectById(id ?? '');
+  const project = useLocalizedProject(id ?? '');
   const { getLikes, incrementLike } = useLikes();
 
   if (!project) {
@@ -38,6 +38,23 @@ export default function ProjectDetailScreen() {
 
   const likes = getLikes(project.id);
   const InteractiveComponent = projectComponents[project.componentId ?? ''];
+
+  // Full-bleed: o componente renderiza a página inteira (hero próprio), sem o
+  // título/descrição/stack padrão do detalhe.
+  if (project.fullBleed && InteractiveComponent) {
+    return (
+      <View style={styles.screen}>
+        <ScrollView style={styles.scroll} contentContainerStyle={styles.fullContent}>
+          {Platform.OS === 'web' && (
+            <Pressable onPress={() => router.back()} style={styles.backFull}>
+              <Text style={[styles.backWebText, { fontFamily: MONO }]}>{'<'}</Text>
+            </Pressable>
+          )}
+          <InteractiveComponent />
+        </ScrollView>
+      </View>
+    );
+  }
 
   return (
     <View style={styles.screen}>
@@ -93,6 +110,17 @@ const styles = StyleSheet.create({
   content: {
     padding: spacing.lg,
     paddingBottom: spacing.xxl,
+  },
+  fullContent: {
+    padding: 0,
+  },
+  backFull: {
+    position: 'absolute',
+    top: spacing.md,
+    left: spacing.md,
+    zIndex: 10,
+    paddingVertical: spacing.xs,
+    paddingHorizontal: spacing.sm,
   },
   centered: {
     flex: 1,

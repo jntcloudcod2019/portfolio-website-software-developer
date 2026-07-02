@@ -117,9 +117,9 @@ function timeAgo(date: Date): string {
 // ── Component ────────────────────────────────────────────────────────────────
 
 export function ConversorMoedas() {
-  const [from, setFrom] = useState<Currency>('USD');
-  const [to, setTo] = useState<Currency>('BRL');
-  const [fromInput, setFromInput] = useState('1');
+  const [from, setFrom] = useState<Currency>('BRL');
+  const [to, setTo] = useState<Currency>('USD');
+  const [fromInput, setFromInput] = useState('1000');
   const [rates, setRates] = useState<RateMap>({});
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -250,8 +250,21 @@ export function ConversorMoedas() {
   };
 
   return (
-    <View style={styles.wrap}>
-      <View style={styles.card}>
+    <View style={styles.page}>
+      <View style={styles.inner}>
+        <View style={styles.hero}>
+          <Text style={[styles.eyebrow, { fontFamily: MONO }]}>
+            // ferramenta · câmbio de moedas
+          </Text>
+          <Text style={[styles.title, { fontFamily: GROTESK }]}>
+            Conversor de <Text style={{ color: C.cyan }}>Moedas</Text>
+          </Text>
+          <Text style={[styles.subtitle, { fontFamily: MONO }]}>
+            USD · EUR · GBP · JPY · BRL · cotações em tempo real
+          </Text>
+        </View>
+
+        <View style={styles.card}>
         {/* Loading overlay */}
         {loading && (
           <View style={styles.overlay}>
@@ -342,6 +355,7 @@ export function ConversorMoedas() {
           Dados para referência · não financeiro
         </Text>
       </View>
+      </View>
     </View>
   );
 }
@@ -352,7 +366,38 @@ const webNoOutline: object =
   Platform.OS === 'web' ? ({ outlineStyle: 'none' } as object) : {};
 
 const styles = StyleSheet.create({
-  wrap: { marginBottom: 24 },
+  page: {
+    paddingTop: 64,
+    paddingHorizontal: 24,
+    paddingBottom: 100,
+  },
+  inner: { width: '100%', maxWidth: 640, alignSelf: 'center' },
+
+  // Hero
+  hero: { alignItems: 'center', marginBottom: 40 },
+  eyebrow: {
+    fontSize: 12,
+    letterSpacing: 4,
+    color: C.cyan,
+    textTransform: 'uppercase',
+    marginBottom: 16,
+    textAlign: 'center',
+  },
+  title: {
+    fontSize: 44,
+    fontWeight: '700',
+    color: C.text,
+    letterSpacing: -1,
+    lineHeight: 46,
+    textAlign: 'center',
+    marginBottom: 12,
+  },
+  subtitle: {
+    fontSize: 12,
+    letterSpacing: 0.6,
+    color: C.textDim,
+    textAlign: 'center',
+  },
 
   card: {
     backgroundColor: C.card,

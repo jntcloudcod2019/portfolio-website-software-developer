@@ -55,5 +55,21 @@
   "lp_arch_services_i3_sub": "string → byte[] → PDF stream",
   "lp_arch_data_i1_sub": "Contracts · Models · Producers",
   "lp_arch_data_i2_sub": "bytea PDF · UUIDs · Scoped DI",
-  "lp_arch_data_i3_sub": "Async/await · env vars config"
+  "lp_arch_data_i3_sub": "Async/await · env vars config",
+  "projects_all_title": "All Projects",
+  "projects_all_count": "{{n}} projects available",
+  "proj_conversor_short": "Real-time converter powered by the Free Currency API.",
+  "proj_conversor_desc": "Currency converter that consumes the Free Currency API to fetch exchange rates updated in real time.",
+  "proj_lambda_short": "Asynchronous digital contract integrator in C#/.NET 8 with RabbitMQ and Authentique.",
+  "proj_lambda_desc": "Asynchronous digital contract integrator — consumes RabbitMQ queues, fetches contracts from PostgreSQL, converts PDFs and triggers the Authentique API for electronic signature via WhatsApp.",
+  "study_type_course": "Course",
+  "study_type_article": "Article",
+  "study_cloud_title": "Cloud Architecture Fundamentals",
+  "study_cloud_desc": "Architecture fundamentals on AWS and Azure.",
+  "study_rn_title": "React Native — Official documentation",
+  "study_rn_desc": "Guides and reference for mobile development.",
+  "study_ef_title": "Entity Framework Core",
+  "study_ef_desc": "ORM and migrations in .NET.",
+  "study_rabbit_title": "RabbitMQ Tutorials",
+  "study_rabbit_desc": "Messaging and queue patterns."
 }

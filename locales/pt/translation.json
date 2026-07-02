@@ -55,5 +55,21 @@
   "lp_arch_services_i3_sub": "string → byte[] → PDF stream",
   "lp_arch_data_i1_sub": "Contracts · Models · Producers",
   "lp_arch_data_i2_sub": "bytea PDF · UUIDs · Scoped DI",
-  "lp_arch_data_i3_sub": "Async/await · env vars config"
+  "lp_arch_data_i3_sub": "Async/await · env vars config",
+  "projects_all_title": "Todos os Projetos",
+  "projects_all_count": "{{n}} projetos disponíveis",
+  "proj_conversor_short": "Conversor em tempo real com a Free Currency API.",
+  "proj_conversor_desc": "Conversor de moedas que consome a Free Currency API para obter taxas de câmbio atualizadas em tempo real.",
+  "proj_lambda_short": "Integrador assíncrono de contratos digitais em C#/.NET 8 com RabbitMQ e Authentique.",
+  "proj_lambda_desc": "Integrador assíncrono de contratos digitais — consome filas RabbitMQ, busca contratos em PostgreSQL, converte PDFs e aciona a API Authentique para assinatura eletrônica via WhatsApp.",
+  "study_type_course": "Curso",
+  "study_type_article": "Artigo",
+  "study_cloud_title": "Cloud Architecture Fundamentals",
+  "study_cloud_desc": "Fundamentos de arquitetura em AWS e Azure.",
+  "study_rn_title": "React Native — Documentação oficial",
+  "study_rn_desc": "Guias e referência para desenvolvimento mobile.",
+  "study_ef_title": "Entity Framework Core",
+  "study_ef_desc": "ORM e migrations em .NET.",
+  "study_rabbit_title": "RabbitMQ Tutorials",
+  "study_rabbit_desc": "Mensageria e padrões de filas."
 }

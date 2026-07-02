@@ -4,7 +4,7 @@ import { Platform, StyleSheet, Text, View } from 'react-native';
 import { Section } from '@/components/layout/Section';
 import { ProjectCard } from '@/components/projects/ProjectCard';
 import { useTranslation } from 'react-i18next';
-import { projects } from '@/content/projects';
+import { useLocalizedProjects } from '@/hooks/useLocalizedContent';
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
@@ -35,6 +35,7 @@ function SectionHeader() {
 // ─── Root ─────────────────────────────────────────────────────────────────────
 
 export function ProjectsSection({ sectionRef }: { sectionRef?: React.Ref<View> }) {
+  const projects = useLocalizedProjects();
   return (
     <Section ref={sectionRef} style={styles.sectionOverride as object}>
       <SectionHeader />

@@ -3,7 +3,7 @@ import { Linking, Platform, Pressable, StyleSheet, Text, View } from 'react-nati
 
 import { Section } from '@/components/layout/Section';
 import { useTranslation } from 'react-i18next';
-import { studies } from '@/content/studies';
+import { useLocalizedStudies, type LocalizedStudy } from '@/hooks/useLocalizedContent';
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
@@ -38,7 +38,7 @@ function SectionHeader() {
 
 // ─── Study Card ───────────────────────────────────────────────────────────────
 
-function StudyCard({ item }: { item: (typeof studies)[number] }) {
+function StudyCard({ item }: { item: LocalizedStudy }) {
   const transitionWeb: object =
     Platform.OS === 'web' ? { transition: 'border-color 0.18s ease, transform 0.18s ease' } : {};
   const cardBgWeb: object =
@@ -60,7 +60,7 @@ function StudyCard({ item }: { item: (typeof studies)[number] }) {
       onPress={() => Linking.openURL(item.url)}
     >
       <View style={styles.studyHeader}>
-        <Text style={[styles.studyType, { fontFamily: MONO }]}>{item.type}</Text>
+        <Text style={[styles.studyType, { fontFamily: MONO }]}>{item.typeLabel}</Text>
         <Text style={styles.studyArrow}>↗</Text>
       </View>
       <Text style={[styles.studyTitle, { fontFamily: SPACE }]}>{item.title}</Text>
@@ -72,6 +72,7 @@ function StudyCard({ item }: { item: (typeof studies)[number] }) {
 // ─── Root ─────────────────────────────────────────────────────────────────────
 
 export function StudiesSection({ sectionRef }: { sectionRef?: React.Ref<View> }) {
+  const studies = useLocalizedStudies();
   return (
     <Section ref={sectionRef} style={styles.sectionOverride as object}>
       <SectionHeader />

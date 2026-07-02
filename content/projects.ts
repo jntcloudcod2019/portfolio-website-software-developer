@@ -7,6 +7,12 @@ export type Project = {
   videoUrl: string;
   stack: string[];
   componentId?: string;
+  /** Quando true, o componente interativo renderiza a página inteira (hero próprio),
+   *  então o [id].tsx não desenha título/descrição/stack padrão. */
+  fullBleed?: boolean;
+  /** Chaves i18n para tradução dinâmica; `shortDescription`/`description` servem de fallback PT. */
+  shortKey?: string;
+  descKey?: string;
 };
 
 export const projects: Project[] = [
@@ -20,6 +26,9 @@ export const projects: Project[] = [
     videoUrl: '',
     stack: ['React Native', 'TypeScript', 'Expo', 'Free Currency API'],
     componentId: 'conversor-moedas',
+    fullBleed: true,
+    shortKey: 'proj_conversor_short',
+    descKey: 'proj_conversor_desc',
   },
   {
     id: 'lambda-pregiato',
@@ -30,6 +39,8 @@ export const projects: Project[] = [
     imageUrl: 'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=600&h=400&fit=crop',
     videoUrl: '',
     stack: ['C#', '.NET 8', 'RabbitMQ', 'PostgreSQL', 'EF Core', 'Docker'],
+    shortKey: 'proj_lambda_short',
+    descKey: 'proj_lambda_desc',
   },
 ];
 

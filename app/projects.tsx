@@ -10,20 +10,24 @@ import {
   View,
 } from 'react-native';
 
+import { useTranslation } from 'react-i18next';
+
 import { colors, spacing } from '@/constants/theme';
-import { projects } from '@/content/projects';
+import { useLocalizedProjects } from '@/hooks/useLocalizedContent';
 
 export default function AllProjectsScreen() {
   const router = useRouter();
+  const { t } = useTranslation();
   const { width } = useWindowDimensions();
   const isWide = width > 768;
+  const projects = useLocalizedProjects();
 
   return (
     <View style={styles.screen}>
       <ScrollView style={styles.scroll} contentContainerStyle={styles.content}>
-        <Text style={styles.heading}>Todos os Projetos</Text>
+        <Text style={styles.heading}>{t('projects_all_title')}</Text>
         <Text style={styles.subheading}>
-          {projects.length} projetos disponíveis
+          {t('projects_all_count', { n: projects.length })}
         </Text>
   
         <View style={[styles.grid, isWide && styles.gridWide]}>
