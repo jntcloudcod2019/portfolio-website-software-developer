@@ -1,13 +1,15 @@
-import { useLocalSearchParams, useRouter } from 'expo-router';
+import {
+  useLocalSearchParams,
+  useRouter } from 'expo-router';
 import React from 'react';
 import {
   Platform,
   Pressable,
   ScrollView,
   StyleSheet,
-  Text,
   View,
 } from 'react-native';
+import { Text } from '@/components/ui/AppText';
 
 import { ProjectVideo } from '@/components/project/ProjectVideo';
 import { projectComponents } from '@/components/projetos';

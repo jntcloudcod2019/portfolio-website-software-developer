@@ -1,7 +1,15 @@
 import * as Linking from 'expo-linking';
-import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
-import React, { useState } from 'react';
-import { Platform, Pressable, StyleSheet, Text, View } from 'react-native';
+import {
+  Ionicons,
+  MaterialCommunityIcons } from '@expo/vector-icons';
+import React,
+  { useState } from 'react';
+import { Platform,
+  Pressable,
+  StyleSheet,
+  View,
+} from 'react-native';
+import { Text } from '@/components/ui/AppText';
 
 import { Section } from '@/components/layout/Section';
 import { useTranslation } from 'react-i18next';

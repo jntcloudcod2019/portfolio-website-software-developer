@@ -1,14 +1,15 @@
-import { useRouter } from 'expo-router';
+import {
+  useRouter } from 'expo-router';
 import React from 'react';
 import {
   Image,
   Pressable,
   ScrollView,
   StyleSheet,
-  Text,
   useWindowDimensions,
   View,
 } from 'react-native';
+import { Text } from '@/components/ui/AppText';
 
 import { useTranslation } from 'react-i18next';
 

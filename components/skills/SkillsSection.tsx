@@ -1,7 +1,12 @@
-import { MaterialCommunityIcons } from '@expo/vector-icons';
+import {
+  MaterialCommunityIcons } from '@expo/vector-icons';
 import * as Linking from 'expo-linking';
 import React from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { Pressable,
+  StyleSheet,
+  View,
+} from 'react-native';
+import { Text } from '@/components/ui/AppText';
 
 import { colors, spacing } from '@/constants/theme';
 import { skills, type SkillIconKey, type SkillItem } from '@/content/skills';

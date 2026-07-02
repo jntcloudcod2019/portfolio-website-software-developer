@@ -1,14 +1,17 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, {
+  useEffect,
+  useRef,
+  useState } from 'react';
 import {
   Animated,
   Platform,
   Pressable,
   ScrollView,
   StyleSheet,
-  Text,
   useWindowDimensions,
   View,
 } from 'react-native';
+import { Text } from '@/components/ui/AppText';
 import { Ionicons } from '@expo/vector-icons';
 
 import { useTranslation } from 'react-i18next';

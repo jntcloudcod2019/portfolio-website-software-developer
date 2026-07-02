@@ -1,5 +1,6 @@
 import React from 'react';
-import { Linking, Platform, Pressable, StyleSheet, Text, View } from 'react-native';
+import { Linking, Platform, Pressable, StyleSheet, View } from 'react-native';
+import { Text } from '@/components/ui/AppText';
 
 import { Section } from '@/components/layout/Section';
 import { useTranslation } from 'react-i18next';

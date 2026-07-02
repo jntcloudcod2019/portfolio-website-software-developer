@@ -1,5 +1,8 @@
-import { useRouter } from 'expo-router';
-import React, { useEffect, useRef } from 'react';
+import {
+  useRouter } from 'expo-router';
+import React,
+  { useEffect,
+  useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   Linking,
@@ -7,10 +10,10 @@ import {
   Pressable,
   ScrollView,
   StyleSheet,
-  Text,
   useWindowDimensions,
   View,
 } from 'react-native';
+import { Text } from '@/components/ui/AppText';
 import { SvgXml } from 'react-native-svg';
 
 // ── Constants ──────────────────────────────────────────────────────────────────

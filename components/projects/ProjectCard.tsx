@@ -1,6 +1,13 @@
-import { useRouter } from 'expo-router';
+import {
+  useRouter } from 'expo-router';
 import React from 'react';
-import { Image, Pressable, StyleSheet, Text, useWindowDimensions, View } from 'react-native';
+import { Image,
+  Pressable,
+  StyleSheet,
+  useWindowDimensions,
+  View,
+} from 'react-native';
+import { Text } from '@/components/ui/AppText';
 
 import { colors, spacing } from '@/constants/theme';
 import type { Project } from '@/content/projects';

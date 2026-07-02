@@ -1,14 +1,22 @@
 import * as Linking from 'expo-linking';
-import React, { useEffect, useRef, useState } from 'react';
+import React, {
+  useEffect,
+  useRef,
+  useState } from 'react';
 import {
   Animated,
   Platform,
   StyleSheet,
-  Text,
   TouchableOpacity,
   useWindowDimensions,
   View,
 } from 'react-native';
+import { Text } from '@/components/ui/AppText';
+
+import { PdfModal } from '@/components/ui/PdfModal';
+
+// PDF do diploma servido como asset estático de `public/` (Expo web serve /public na raiz).
+const DIPLOMA_URI = '/diploma.pdf';
 
 // ─── Types & Data ─────────────────────────────────────────────────────────────
 
@@ -21,6 +29,8 @@ export interface FormacaoItem {
   status: Status;
   accent: string;
   credencialUrl?: string;
+  /** Quando true, exibe o link "Exibir Diploma" que abre o PDF do diploma. */
+  diploma?: boolean;
 }
 
 const ITEMS: FormacaoItem[] = [
@@ -30,6 +40,7 @@ const ITEMS: FormacaoItem[] = [
     periodo: '2019 — 2023',
     status: 'concluido',
     accent: '#34d399',
+    diploma: true,
   },
   {
     titulo: 'Pós-graduação em Arquitetura de Sistemas .NET & Azure',
@@ -131,7 +142,15 @@ function StatusBadge({ status, accent }: { status: Status; accent: string }) {
 
 // ─── Card ─────────────────────────────────────────────────────────────────────
 
-function Card({ item, hovered }: { item: FormacaoItem; hovered: boolean }) {
+function Card({
+  item,
+  hovered,
+  onShowDiploma,
+}: {
+  item: FormacaoItem;
+  hovered: boolean;
+  onShowDiploma?: () => void;
+}) {
   const borderTopColor = hovered ? item.accent : item.accent + '80';
   const borderColor = hovered ? '#2a3040' : '#1c1f26';
   const bgColor = hovered ? '#161b24' : '#101216';
@@ -167,6 +186,13 @@ function Card({ item, hovered }: { item: FormacaoItem; hovered: boolean }) {
         >
           <Text style={[styles.credentialLink, { color: item.accent, fontFamily: MONO }]}>
             Ver credencial ↗
+          </Text>
+        </TouchableOpacity>
+      )}
+      {item.diploma && (
+        <TouchableOpacity onPress={onShowDiploma} style={styles.credentialWrap}>
+          <Text style={[styles.credentialLink, { color: item.accent, fontFamily: MONO }]}>
+            Exibir Diploma ↗
           </Text>
         </TouchableOpacity>
       )}
@@ -209,7 +235,7 @@ function SectionHeader() {
 
 // ─── Horizontal Timeline ──────────────────────────────────────────────────────
 
-function HorizontalTimeline() {
+function HorizontalTimeline({ onShowDiploma }: { onShowDiploma?: () => void }) {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 
   return (
@@ -268,7 +294,11 @@ function HorizontalTimeline() {
             onMouseEnter={() => setHoveredIndex(index)}
             onMouseLeave={() => setHoveredIndex(null)}
           >
-            <Card item={item} hovered={hoveredIndex === index} />
+            <Card
+              item={item}
+              hovered={hoveredIndex === index}
+              onShowDiploma={onShowDiploma}
+            />
           </HoverableView>
         ))}
       </View>
@@ -279,7 +309,7 @@ function HorizontalTimeline() {
 
 // ─── Vertical Timeline ────────────────────────────────────────────────────────
 
-function VerticalTimeline() {
+function VerticalTimeline({ onShowDiploma }: { onShowDiploma?: () => void }) {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 
   return (
@@ -314,7 +344,11 @@ function VerticalTimeline() {
             >
               {item.periodo}
             </Text>
-            <Card item={item} hovered={hoveredIndex === index} />
+            <Card
+              item={item}
+              hovered={hoveredIndex === index}
+              onShowDiploma={onShowDiploma}
+            />
           </View>
 
         </HoverableView>
@@ -328,11 +362,31 @@ function VerticalTimeline() {
 export function FormacaoAcademica() {
   const { width } = useWindowDimensions();
   const isWide = width >= 600;
+  const [diplomaOpen, setDiplomaOpen] = useState(false);
+
+  const openDiploma = () => {
+    if (Platform.OS === 'web') {
+      setDiplomaOpen(true);
+    } else if (DIPLOMA_URI) {
+      Linking.openURL(DIPLOMA_URI);
+    }
+  };
 
   return (
     <View style={styles.root}>
       <SectionHeader />
-      {isWide ? <HorizontalTimeline /> : <VerticalTimeline />}
+      {isWide ? (
+        <HorizontalTimeline onShowDiploma={openDiploma} />
+      ) : (
+        <VerticalTimeline onShowDiploma={openDiploma} />
+      )}
+      <PdfModal
+        visible={diplomaOpen}
+        uri={DIPLOMA_URI}
+        onClose={() => setDiplomaOpen(false)}
+        title="Diploma"
+        accent="#34d399"
+      />
     </View>
   );
 }

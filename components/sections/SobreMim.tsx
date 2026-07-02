@@ -1,13 +1,15 @@
-import React, { useEffect, useRef } from 'react';
+import React, {
+  useEffect,
+  useRef } from 'react';
 import {
   Animated,
   Image,
   Platform,
   StyleSheet,
-  Text,
   useWindowDimensions,
   View,
 } from 'react-native';
+import { Text } from '@/components/ui/AppText';
 
 import { useTranslation } from 'react-i18next';
 

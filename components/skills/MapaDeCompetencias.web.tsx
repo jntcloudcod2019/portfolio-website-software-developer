@@ -1,6 +1,15 @@
-import { MaterialCommunityIcons } from '@expo/vector-icons';
-import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import {
+  MaterialCommunityIcons } from '@expo/vector-icons';
+import React,
+  { useEffect,
+  useMemo,
+  useRef,
+  useState } from 'react';
+import { Pressable,
+  StyleSheet,
+  View,
+} from 'react-native';
+import { Text } from '@/components/ui/AppText';
 
 // ─── Types & Data ─────────────────────────────────────────────────────────────
 

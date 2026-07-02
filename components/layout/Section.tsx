@@ -1,12 +1,13 @@
-import React, { forwardRef } from 'react';
+import React, {
+  forwardRef } from 'react';
 import {
   Platform,
   StyleSheet,
-  Text,
   useWindowDimensions,
   View,
   type ViewProps,
 } from 'react-native';
+import { Text } from '@/components/ui/AppText';
 
 import { ScrollReveal } from '@/components/ui/ScrollReveal';
 import { colors, spacing } from '@/constants/theme';

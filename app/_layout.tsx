@@ -2,10 +2,17 @@ import '../global.css';
 
 import '../i18n';
 
-import { Stack, useRouter, usePathname } from 'expo-router';
+import {
+  Stack,
+  useRouter,
+  usePathname } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { StyleSheet, Pressable, Text, Platform } from 'react-native';
+import { StyleSheet,
+  Pressable,
+  Platform,
+} from 'react-native';
+import { Text } from '@/components/ui/AppText';
 
 import { LikesProvider } from '@/context/LikesContext';
 import { AppConfigProvider } from '@/context/AppConfigContext';

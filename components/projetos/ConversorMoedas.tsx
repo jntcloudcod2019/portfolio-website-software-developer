@@ -1,13 +1,16 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, {
+  useCallback,
+  useEffect,
+  useState } from 'react';
 import {
   ActivityIndicator,
   Platform,
   Pressable,
   StyleSheet,
-  Text,
   TextInput,
   View,
 } from 'react-native';
+import { Text } from '@/components/ui/AppText';
 import { SvgXml } from 'react-native-svg';
 
 import US from 'country-flag-icons/string/3x2/US';

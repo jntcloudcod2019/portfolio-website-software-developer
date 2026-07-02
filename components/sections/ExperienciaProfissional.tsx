@@ -1,11 +1,14 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, {
+  useEffect,
+  useRef,
+  useState } from 'react';
 import {
   Animated,
   Platform,
   StyleSheet,
-  Text,
   View,
 } from 'react-native';
+import { Text } from '@/components/ui/AppText';
 
 import { Section } from '@/components/layout/Section';
 import { useTranslation } from 'react-i18next';

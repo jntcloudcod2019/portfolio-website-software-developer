@@ -1,5 +1,6 @@
 import React from 'react';
-import { Platform, StyleSheet, Text, View } from 'react-native';
+import { Platform, StyleSheet, View } from 'react-native';
+import { Text } from '@/components/ui/AppText';
 
 import { Section } from '@/components/layout/Section';
 import { ProjectCard } from '@/components/projects/ProjectCard';
