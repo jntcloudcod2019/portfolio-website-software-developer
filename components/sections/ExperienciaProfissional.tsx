@@ -40,7 +40,7 @@ const EXPERIENCIAS: Experiencia[] = [
     accent: '#34d399', mono: 'PG',
     role: 'Tech Services Lead',
     company: 'PREGIATO', type: 'Freelance',
-    period: 'jan 2025 — mai 2026', duration: '1 ano 5 meses', location: 'São Paulo · Remoto',
+    period: 'jan 2025 — mai 2026', duration: '1 ano 5 meses', location: 'São Paulo ',
     summary:
       'Tech Lead de uma plataforma SaaS para agência de modelos — do design da arquitetura ao deploy em produção: cadastro de talentos, agendamentos, portfólio, contratos em PDF, autenticação e notificações via WhatsApp e e-mail.',
     summaryEn:
@@ -109,7 +109,7 @@ const EXPERIENCIAS: Experiencia[] = [
     roleEn: 'Jr Software Engineer',
     company: 'Itaú Unibanco', type: 'Tempo integral',
     typeEn: 'Full-time',
-    period: 'jun 2021 — jun 2023', duration: '2 anos 1 mês', location: 'Remoto',
+    period: 'jun 2021 — jun 2023', duration: '2 anos 1 mês', location: 'São Paulo',
     summary:
       'No coração dos sistemas financeiros do Itaú — área de Risco de Mercado e Capital de Risco de Crédito Regulatório, em ambiente de alta criticidade e complexidade regulatória.',
     summaryEn:

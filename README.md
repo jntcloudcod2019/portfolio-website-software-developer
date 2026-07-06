@@ -3,7 +3,7 @@
 # Jonathan F. Silva
 
 ### Engenheiro de Software Full Stack
-**Mercado Financeiro & Bancário · São Paulo · Remoto**
+**Mercado Financeiro & Bancário · São Paulo ·**
 
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/jonathan-f-silva-60a918162)
 [![Gmail](https://img.shields.io/badge/Gmail-EA4335?style=for-the-badge&logo=gmail&logoColor=white)](mailto:jonathanfrnnd3@gmail.com)
@@ -22,10 +22,10 @@ Já atuei em domínios críticos como **Risco de Crédito Regulatório, Risco de
 Perfil **hands-on com visão de arquitetura**: entro no código e enxergo o sistema como um todo, da modelagem de APIs à observabilidade em produção, passando por mensageria, cloud e automações.
 
 ```text
-🏦  Domínios      Risco · Pricing · Pagamentos · Chargeback · Liquidez
-⚙️  Arquitetura   Microsserviços · DDD · Hexagonal · Event-Driven
-☁️  Cloud         AWS · Azure · Railway
-📍  Localização   São Paulo, SP — Remoto
+  Domínios      Risco · Pricing · Pagamentos · Chargeback · Liquidez
+  Arquitetura   Microsserviços · DDD · Hexagonal · Event-Driven
+  Cloud         AWS · Azure · Railway
+  Localização   São Paulo, SP 
 ```
 
 ---
@@ -65,7 +65,7 @@ Perfil **hands-on com visão de arquitetura**: entro no código e enxergo o sist
 ## Experiência Profissional
 
 ### 🟢 Tech Services Lead — PREGIATO · Freelance
-`jan 2025 — mai 2026` · 1 ano 5 meses · São Paulo · Remoto
+`jan 2025 — mai 2026` · 1 ano 5 meses · São Paulo 
 
 Tech Lead de uma plataforma SaaS para agência de modelos — do design da arquitetura ao deploy em produção. Sistema completo com cadastro de talentos, agendamentos, portfólio, contratos PDF, autenticação e notificações via WhatsApp e e-mail.
 
@@ -104,7 +104,7 @@ Integração end-to-end de APIs de pagamento do Bradesco para clientes estratég
 ---
 
 ### 🟣 Engenheiro de Software Jr — Itaú Unibanco
-`jun 2021 — jun 2023` · 2 anos 1 mês · Remoto
+`jun 2021 — jun 2023` · 2 anos 1 mês 
 
 No coração dos sistemas financeiros do Itaú — área de **Risco de Mercado e Capital de Risco de Crédito Regulatório**, em ambiente de alta criticidade e complexidade regulatória.
 

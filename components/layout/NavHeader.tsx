@@ -4,6 +4,7 @@ import React, {
   useState } from 'react';
 import {
   Animated,
+  Linking,
   Platform,
   Pressable,
   ScrollView,
@@ -150,13 +151,15 @@ const LANG_TABS: { code: string; flag: string; label: string }[] = [
 
 function LangTabs() {
   const { currentLanguage, changeLanguage } = useI18n();
+  const [hoveredCode, setHoveredCode] = useState<string | null>(null);
 
   return (
     <View style={styles.tabsWrap}>
       {LANG_TABS.map((tab, i) => {
         const active = currentLanguage === tab.code;
+        const hovered = hoveredCode === tab.code && Platform.OS === 'web';
         const tabBgWeb: object =
-          Platform.OS === 'web' ? { transition: 'background-color 0.18s ease' } : {};
+          Platform.OS === 'web' ? { transition: 'background-color 0.18s ease, color 0.18s ease' } : {};
         const tabBarWeb: object =
           Platform.OS === 'web' && active
             ? {
@@ -166,16 +169,19 @@ function LangTabs() {
                     : 'linear-gradient(to right, #38bdf8, #818cf8)',
               }
             : {};
+        const labelColor = active ? '#e8eaed' : hovered ? '#7dd3fc' : '#4b5159';
         return (
           <React.Fragment key={tab.code}>
             {i > 0 && <View style={styles.tabSep} />}
             <Pressable
               onPress={() => changeLanguage(tab.code)}
+              onHoverIn={() => setHoveredCode(tab.code)}
+              onHoverOut={() => setHoveredCode(null)}
               style={[styles.tab, active && styles.tabActive, tabBgWeb as object]}
               accessibilityLabel={tab.code === 'pt' ? 'Português' : 'English'}
             >
               <Text style={styles.tabFlag}>{tab.flag}</Text>
-              <Text style={[styles.tabLabel, { fontFamily: MONO, color: active ? '#e8eaed' : '#4b5159' }]}>
+              <Text style={[styles.tabLabel, { fontFamily: MONO, color: labelColor }, tabBgWeb as object]}>
                 {tab.label}
               </Text>
               <View style={[styles.tabBar, { opacity: active ? 1 : 0 }, tabBarWeb as object]} />
@@ -184,6 +190,51 @@ function LangTabs() {
         );
       })}
     </View>
+  );
+}
+
+// ─── CvButton (download do currículo) ────────────────────────────────────────
+// Reutiliza o padrão do header (Pressable + Ionicons + estilos). Fica ao lado
+// do LangTabs. O PDF é servido de /public em /CV_Jonathan_Fernando_.pdf.
+
+const CV_URL = '/CV_Jonathan_Fernando_.pdf';
+
+function CvButton() {
+  const [hovered, setHovered] = useState(false);
+  const active = hovered && Platform.OS === 'web';
+
+  const onPress = () => {
+    if (Platform.OS === 'web') {
+      const a = document.createElement('a');
+      a.href = CV_URL;
+      a.download = 'CV_Jonathan_Fernando.pdf';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    } else {
+      Linking.openURL(CV_URL);
+    }
+  };
+
+  const transitionWeb: object =
+    Platform.OS === 'web'
+      ? { cursor: 'pointer', transition: 'border-color 0.18s ease, color 0.18s ease' }
+      : {};
+
+  const color = active ? '#7dd3fc' : '#9ca3af';
+
+  return (
+    <Pressable
+      onPress={onPress}
+      onHoverIn={() => setHovered(true)}
+      onHoverOut={() => setHovered(false)}
+      style={[styles.cvButton, active && styles.cvButtonHover, transitionWeb]}
+      accessibilityRole="button"
+      accessibilityLabel="Baixar currículo (PDF)"
+    >
+      <Ionicons name="download-outline" size={15} color={color} />
+      <Text style={[styles.cvLabel, { fontFamily: MONO, color }]}>Download CV</Text>
+    </Pressable>
   );
 }
 
@@ -354,6 +405,7 @@ function MobileDrawerWeb({
         ))}
         <View style={styles.drawerDivider} />
         <View style={styles.drawerLangRow}>
+          <CvButton />
           <LangTabs />
         </View>
       </View>
@@ -398,6 +450,7 @@ function MobileDrawerNative({
         ))}
         <View style={styles.drawerDivider} />
         <View style={styles.drawerLangRow}>
+          <CvButton />
           <LangTabs />
         </View>
       </Animated.View>
@@ -541,7 +594,10 @@ export function NavHeader({ activeSection, onNavigate }: NavHeaderProps) {
         ))}
       </ScrollView>
 
-      <LangTabs />
+      <View style={styles.rightGroup}>
+        <CvButton />
+        <LangTabs />
+      </View>
     </View>
   );
 }
@@ -665,6 +721,27 @@ const styles = StyleSheet.create({
     borderRadius:    1,
     backgroundColor: '#38bdf8',
   },
+
+  /* ── Right group (lang + CV) ───────────────────────────────────────────── */
+  rightGroup: {
+    flexDirection: 'row',
+    alignItems:    'center',
+    flexShrink:    0,
+  },
+  cvButton: {
+    flexDirection:     'row',
+    alignItems:        'center',
+    gap:               6,
+    height:            30,
+    paddingHorizontal: 12,
+    borderRadius:      8,
+    borderWidth:       1,
+    borderColor:       '#1c1f26',
+    backgroundColor:   '#0e1014',
+    flexShrink:        0,
+  },
+  cvButtonHover: { borderColor: '#38bdf855' },
+  cvLabel: { fontSize: 10, fontWeight: '700', letterSpacing: 1.5, color: '#9ca3af' },
 
   /* ── Lang Tabs ─────────────────────────────────────────────────────────── */
   tabsWrap: {

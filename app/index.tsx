@@ -1,14 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { Platform, ScrollView, StyleSheet, View } from 'react-native';
 
 import { AboutSection } from '@/components/sections/AboutSection';
-import { ContactSection } from '@/components/sections/ContactSection';
-import { ExperienciaProfissional } from '@/components/sections/ExperienciaProfissional';
-import { ProjectsSection } from '@/components/sections/ProjectsSection';
-import { SkillsSectionWrapper } from '@/components/sections/SkillsSectionWrapper';
-import { StudiesSection } from '@/components/sections/StudiesSection';
 import { NavHeader, type SectionKey } from '@/components/layout/NavHeader';
 import { ScrollBar } from '@/components/layout/ScrollBar';
+import { LazySection } from '@/components/ui/LazySection';
 import { colors } from '@/constants/theme';
 import { SECTION_ORDER, useSectionScroll } from '@/hooks/useSectionScroll';
 
@@ -17,6 +13,17 @@ export default function HomeScreen() {
   const [activeSection, setActiveSection] = useState<SectionKey>('about');
   const [scrollY, setScrollY] = useState(0);
   const [contentHeight, setContentHeight] = useState(0);
+
+  const loadExperience = useCallback(() =>
+    import('@/components/sections/ExperienciaProfissional').then(m => ({ default: m.ExperienciaProfissional })), []);
+  const loadProjects = useCallback(() =>
+    import('@/components/sections/ProjectsSection').then(m => ({ default: m.ProjectsSection })), []);
+  const loadStudies = useCallback(() =>
+    import('@/components/sections/StudiesSection').then(m => ({ default: m.StudiesSection })), []);
+  const loadSkills = useCallback(() =>
+    import('@/components/sections/SkillsSectionWrapper').then(m => ({ default: m.SkillsSectionWrapper })), []);
+  const loadContact = useCallback(() =>
+    import('@/components/sections/ContactSection').then(m => ({ default: m.ContactSection })), []);
 
   // Web: IntersectionObserver to track which section is visible
   useEffect(() => {
@@ -60,16 +67,31 @@ export default function HomeScreen() {
         showsVerticalScrollIndicator={false}
         decelerationRate="fast"
         snapToAlignment="start"
-        scrollEventThrottle={16}
+        scrollEventThrottle={100}
         onScroll={(e) => setScrollY(e.nativeEvent.contentOffset.y)}
         onContentSizeChange={(_, h) => setContentHeight(h)}
       >
         <AboutSection sectionRef={setSectionRef('about')} />
-        <ExperienciaProfissional sectionRef={setSectionRef('experience')} />
-        <ProjectsSection sectionRef={setSectionRef('projects')} />
-        <StudiesSection sectionRef={setSectionRef('studies')} />
-        <SkillsSectionWrapper sectionRef={setSectionRef('skills')} />
-        <ContactSection sectionRef={setSectionRef('contact')} />
+        <LazySection
+          sectionRef={setSectionRef('experience')}
+          load={loadExperience}
+        />
+        <LazySection
+          sectionRef={setSectionRef('projects')}
+          load={loadProjects}
+        />
+        <LazySection
+          sectionRef={setSectionRef('studies')}
+          load={loadStudies}
+        />
+        <LazySection
+          sectionRef={setSectionRef('skills')}
+          load={loadSkills}
+        />
+        <LazySection
+          sectionRef={setSectionRef('contact')}
+          load={loadContact}
+        />
       </ScrollView>
 
       <NavHeader activeSection={activeSection} onNavigate={scrollToSection} />

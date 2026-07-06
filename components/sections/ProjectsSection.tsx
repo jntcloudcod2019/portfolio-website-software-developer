@@ -1,5 +1,6 @@
+import { useRouter } from 'expo-router';
 import React from 'react';
-import { Platform, StyleSheet, View } from 'react-native';
+import { Platform, Pressable, StyleSheet, View } from 'react-native';
 import { Text } from '@/components/ui/AppText';
 
 import { Section } from '@/components/layout/Section';
@@ -20,15 +21,11 @@ const MONO = Platform.select({
 
 function SectionHeader() {
   const { t } = useTranslation();
-  const ruleWeb: object =
-    Platform.OS === 'web'
-      ? { background: 'linear-gradient(to right, #23262d, transparent)' }
-      : {};
 
   return (
-    <View style={styles.headerRow}>
-      <Text style={[styles.headerLabel, { fontFamily: MONO }]}>{t('section_projects')}</Text>
-      <View style={[styles.headerRule, ruleWeb]} />
+    <View style={styles.headerBlock}>
+      <Text style={styles.heading}>{t('section_projects')}</Text>
+      <Text style={styles.subheading}>Uma seleção do que construí recentemente.</Text>
     </View>
   );
 }
@@ -37,6 +34,8 @@ function SectionHeader() {
 
 export function ProjectsSection({ sectionRef }: { sectionRef?: React.Ref<View> }) {
   const projects = useLocalizedProjects();
+  const router = useRouter();
+
   return (
     <Section ref={sectionRef} style={styles.sectionOverride as object}>
       <SectionHeader />
@@ -44,6 +43,18 @@ export function ProjectsSection({ sectionRef }: { sectionRef?: React.Ref<View> }
         {projects.map((project) => (
           <ProjectCard key={project.id} project={project} />
         ))}
+      </View>
+      <View style={styles.moreContainer}>
+        <Pressable
+          style={({ pressed }) => [
+            styles.moreButton,
+            pressed && styles.moreButtonPressed,
+          ]}
+          onPress={() => router.push('/projects')}
+        >
+          <Text style={styles.moreButtonText}>Mais Projetos</Text>
+          <Text style={styles.moreButtonArrow}>→</Text>
+        </Pressable>
       </View>
     </Section>
   );
@@ -57,27 +68,61 @@ const styles = StyleSheet.create({
   },
 
   /* Header */
-  headerRow: {
-    flexDirection: 'row',
+  headerBlock: {
     alignItems: 'center',
-    gap: 16,
-    marginBottom: 32,
+    marginBottom: 38,
   },
-  headerLabel: {
-    fontSize: 13,
-    color: '#9ca3af',
-    letterSpacing: 5,
-    textTransform: 'uppercase',
+  heading: {
+    fontSize: 32,
+    fontWeight: '700',
+    color: '#e8eaed',
+    letterSpacing: -0.02,
+    marginBottom: 8,
+    textAlign: 'center',
   },
-  headerRule: {
-    flex: 1,
-    height: 1,
-    backgroundColor: '#23262d',
+  subheading: {
+    fontSize: 15,
+    color: '#9aa0a8',
+    textAlign: 'center',
   },
+
+  /* Grid */
   grid: {
     width: '100%',
     flexDirection: 'row',
     flexWrap: 'wrap',
-    gap: 16,
+    alignItems: 'stretch',
+    gap: 18,
+  },
+
+  /* More button */
+  moreContainer: {
+    alignItems: 'center',
+    marginTop: 38,
+  },
+  moreButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+    backgroundColor: '#0e1014',
+    borderWidth: 1,
+    borderColor: '#38bdf855',
+    borderRadius: 12,
+    paddingVertical: 14,
+    paddingHorizontal: 26,
+  },
+  moreButtonPressed: {
+    opacity: 0.88,
+    transform: [{ scale: 0.98 }],
+  },
+  moreButtonText: {
+    fontSize: 14.5,
+    fontWeight: '600',
+    color: '#7dd3fc',
+  },
+  moreButtonArrow: {
+    fontSize: 14.5,
+    fontWeight: '600',
+    color: '#7dd3fc',
   },
 });

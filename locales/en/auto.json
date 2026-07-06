@@ -5,5 +5,25 @@
   "CERTIFICADO": "CERTIFIED",
   "Ver credencial ↗": "View credential ↗",
   "Exibir Diploma ↗": "Show Diploma ↗",
-  "Documento indisponível.": "Document unavailable."
+  "Documento indisponível.": "Document unavailable.",
+  "← Projetos": "← Projects",
+  "// projeto · plataforma saas full-stack": "// project · full-stack saas platform",
+  "Plataforma full-stack de gestão para agência de modelos — backend .NET 8 em Clean Architecture, SPA React + TypeScript, autenticação Clerk, mensageria, real-time e geração de documentos. Monorepo com deploy containerizado na Railway.": "Full-stack management platform for a modeling agency — .NET 8 backend in Clean Architecture, React + TypeScript SPA, Clerk authentication, messaging, real-time and document generation. Monorepo with containerized deploy on Railway.",
+  "Ver no GitHub": "View on GitHub",
+  "desenvolvimento ativo": "active development",
+  "Fluxo da Aplicação": "Application Flow",
+  "clean architecture · 6 camadas": "clean architecture · 6 layers",
+  "Arquitetura do Monorepo": "Monorepo Architecture",
+  "· requisição atravessando as camadas": "· request crossing the layers",
+  "Sessões · JWT": "Sessions · JWT",
+  "Core · Domínio": "Core · Domain",
+  "Entidades · Interfaces": "Entities · Interfaces",
+  "sessão · token": "session · token",
+  "use cases · entidades": "use cases · entities",
+  "Infra & Integrações": "Infra & Integrations",
+  "Deploy · mensageria · storage": "Deploy · messaging · storage",
+  "Estado & Dados": "State & Data",
+  "Filas assíncronas · tempo real": "Async queues · real-time",
+  "Auth gerenciada · logging estruturado": "Managed auth · structured logging"
 }
+

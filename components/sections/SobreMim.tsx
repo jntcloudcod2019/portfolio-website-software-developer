@@ -3,17 +3,18 @@ import React, {
   useRef } from 'react';
 import {
   Animated,
-  Image,
   Platform,
   StyleSheet,
   useWindowDimensions,
   View,
 } from 'react-native';
 import { Text } from '@/components/ui/AppText';
+import { ImageWithSkeleton } from '@/components/ui/ImageWithSkeleton';
 
 import { useTranslation } from 'react-i18next';
 
-const profilePhoto = require('../../assets/profile-photo.jpeg') as number;
+const profilePhotoNative = require('../../assets/profile-photo.webp') as number;
+const profilePhotoWeb = { uri: '/jonathan-800.webp' };
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
@@ -77,17 +78,22 @@ function OnlineBadge() {
 // ─── PhotoColumn ─────────────────────────────────────────────────────────────
 
 function PhotoColumn({ isWide }: { isWide: boolean }) {
+  const isWeb = Platform.OS === 'web';
   const imageWeb: object =
-    Platform.OS === 'web' ? { objectPosition: 'center 15%' } : {};
+    isWeb ? { objectPosition: 'center 15%' } : {};
+  const webProps: object =
+    isWeb ? { fetchPriority: 'high' as const } : {};
 
   return (
     <View style={[styles.photoCol, isWide ? styles.photoColWide : styles.photoColNarrow]}>
       <View style={styles.photoFrame}>
-        <Image
-          source={profilePhoto}
+        <ImageWithSkeleton
+          source={isWeb ? profilePhotoWeb : profilePhotoNative}
           style={[styles.photo, imageWeb as object]}
           resizeMode="cover"
           accessibilityLabel="Foto de Jonathan F. Silva"
+          eager
+          {...webProps}
         />
       </View>
       <OnlineBadge />
@@ -135,8 +141,6 @@ function CodeColumn() {
   const kvRows = [
     { key: 'name',    value: 'Jonathan F. Silva' },
     { key: 'role',    value: t('about_role') },
-    { key: 'focus',   value: t('about_focus') },
-    { key: 'domains', value: t('about_domains') },
     { key: 'stack',   value: t('about_stack') },
     { key: 'local',   value: t('about_local') },
   ];

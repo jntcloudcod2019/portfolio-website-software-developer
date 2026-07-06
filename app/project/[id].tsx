@@ -1,6 +1,7 @@
 import {
   useLocalSearchParams,
   useRouter } from 'expo-router';
+import Head from 'expo-router/head';
 import React from 'react';
 import {
   Platform,
@@ -41,61 +42,83 @@ export default function ProjectDetailScreen() {
   const likes = getLikes(project.id);
   const InteractiveComponent = projectComponents[project.componentId ?? ''];
 
+  const pageTitle = `${project.name} | Jonathan F. Silva`;
+
   // Full-bleed: o componente renderiza a página inteira (hero próprio), sem o
   // título/descrição/stack padrão do detalhe.
   if (project.fullBleed && InteractiveComponent) {
     return (
-      <View style={styles.screen}>
-        <ScrollView style={styles.scroll} contentContainerStyle={styles.fullContent}>
-          {Platform.OS === 'web' && (
-            <Pressable onPress={() => router.back()} style={styles.backFull}>
-              <Text style={[styles.backWebText, { fontFamily: MONO }]}>{'<'}</Text>
-            </Pressable>
-          )}
-          <InteractiveComponent />
-        </ScrollView>
-      </View>
+      <>
+        <Head>
+          <title>{pageTitle}</title>
+          <meta name="description" content={project.shortDescription} />
+          <meta property="og:title" content={pageTitle} />
+          <meta property="og:description" content={project.shortDescription} />
+          <meta property="og:image" content={project.imageUrl} />
+          <meta property="og:url" content={`https://jonathanfsilva.dev/project/${project.id}`} />
+        </Head>
+        <View style={styles.screen}>
+          <ScrollView style={styles.scroll} contentContainerStyle={styles.fullContent}>
+            {Platform.OS === 'web' && (
+              <Pressable onPress={() => router.back()} style={styles.backFull}>
+                <Text style={[styles.backWebText, { fontFamily: MONO }]}>{'<'}</Text>
+              </Pressable>
+            )}
+            <InteractiveComponent />
+          </ScrollView>
+        </View>
+      </>
     );
   }
 
   return (
-    <View style={styles.screen}>
-      <ScrollView style={styles.scroll} contentContainerStyle={styles.content}>
-        {Platform.OS === 'web' && (
-          <Pressable onPress={() => router.back()} style={styles.backWeb}>
-            <Text style={[styles.backWebText, { fontFamily: MONO }]}>{"<"}</Text>
-          </Pressable>
-        )}
-        <Text style={styles.title}>{project.name}</Text>
+    <>
+      <Head>
+        <title>{pageTitle}</title>
+        <meta name="description" content={project.shortDescription} />
+        <meta property="og:title" content={pageTitle} />
+        <meta property="og:description" content={project.shortDescription} />
+        <meta property="og:image" content={project.imageUrl} />
+        <meta property="og:url" content={`https://jonathanfsilva.dev/project/${project.id}`} />
+      </Head>
+      <View style={styles.screen}>
+        <ScrollView style={styles.scroll} contentContainerStyle={styles.content}>
+          {Platform.OS === 'web' && (
+            <Pressable onPress={() => router.back()} style={styles.backWeb}>
+              <Text style={[styles.backWebText, { fontFamily: MONO }]}>{"<"}</Text>
+            </Pressable>
+          )}
+          <Text style={styles.title}>{project.name}</Text>
   
-        {InteractiveComponent ? (
-          <InteractiveComponent />
-        ) : (
-          <ProjectVideo uri={project.videoUrl} />
-        )}
+          {InteractiveComponent ? (
+            <InteractiveComponent />
+          ) : (
+            <ProjectVideo uri={project.videoUrl} />
+          )}
   
-        <Text style={[styles.description, { fontFamily: MONO }]}>{project.description}</Text>
+          <Text style={[styles.description, { fontFamily: MONO }]}>{project.description}</Text>
   
-        <View style={styles.stackRow}>
-          {project.stack.map((tech) => (
-            <View key={tech} style={styles.stackChip}>
-              <Text style={styles.stackText}>{tech}</Text>
-            </View>
-          ))}
-        </View>
+          <View style={styles.stackRow}>
+            {project.stack.map((tech) => (
+              <View key={tech} style={styles.stackChip}>
+                <Text style={styles.stackText}>{tech}</Text>
+              </View>
+            ))}
+          </View>
   
-        {!project.componentId && (
-          <Pressable
-            style={({ pressed }) => [styles.likeButton, pressed && styles.likeButtonPressed]}
-            onPress={() => incrementLike(project.id)}
-          >
-            <Text style={styles.likeIcon}>♥</Text>
-            <Text style={styles.likeLabel}>Curtir</Text>
-            <Text style={styles.likeCount}>{likes}</Text>
-          </Pressable>
-        )}
-      </ScrollView>
-    </View>
+          {!project.componentId && (
+            <Pressable
+              style={({ pressed }) => [styles.likeButton, pressed && styles.likeButtonPressed]}
+              onPress={() => incrementLike(project.id)}
+            >
+              <Text style={styles.likeIcon}>♥</Text>
+              <Text style={styles.likeLabel}>Curtir</Text>
+              <Text style={styles.likeCount}>{likes}</Text>
+            </Pressable>
+          )}
+        </ScrollView>
+      </View>
+    </>
   );
 }
 
