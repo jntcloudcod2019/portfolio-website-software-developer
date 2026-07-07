@@ -405,8 +405,8 @@ function MobileDrawerWeb({
         ))}
         <View style={styles.drawerDivider} />
         <View style={styles.drawerLangRow}>
-          <CvButton />
           <LangTabs />
+          <CvButton />
         </View>
       </View>
     </>
@@ -450,8 +450,8 @@ function MobileDrawerNative({
         ))}
         <View style={styles.drawerDivider} />
         <View style={styles.drawerLangRow}>
-          <CvButton />
           <LangTabs />
+          <CvButton />
         </View>
       </Animated.View>
     </>
@@ -814,6 +814,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
     paddingVertical:   8,
     alignItems:        'flex-start',
+    gap:               12,
   },
 
   /* ── Native-only drawer / backdrop ────────────────────────────────────── */

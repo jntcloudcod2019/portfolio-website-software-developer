@@ -1,7 +1,6 @@
 import { useRouter } from 'expo-router';
 import React, { useState } from 'react';
 import {
-  Image,
   Linking,
   Platform,
   Pressable,
@@ -37,8 +36,9 @@ export function ProjectCard({ project }: ProjectCardProps) {
   const cardTransitionWeb = isWeb
     ? ({ transition: 'transform .25s cubic-bezier(.2,.7,.2,1), border-color .25s' } as object)
     : null;
-  const imageTransitionWeb = isWeb
-    ? ({ transition: 'transform .4s cubic-bezier(.2,.7,.2,1)' } as object)
+  // Gradiente de um tom só (ciano #38bdf8) que substitui a imagem do card.
+  const previewGradientWeb = isWeb
+    ? ({ background: 'linear-gradient(135deg, #38bdf840 0%, #38bdf80d 55%, transparent 100%)' } as object)
     : null;
 
   const openGitHub = (e?: { stopPropagation?: () => void }) => {
@@ -58,14 +58,8 @@ export function ProjectCard({ project }: ProjectCardProps) {
         hovered && isWeb && styles.cardHover,
       ]}
     >
-      {/* Preview */}
-      <View style={styles.imageWrap}>
-        <Image
-          source={{ uri: project.imageUrl }}
-          style={[styles.image, imageTransitionWeb, hovered && isWeb && styles.imageZoom]}
-          resizeMode="cover"
-        />
-      </View>
+      {/* Preview — cards de projeto NÃO usam imagem: gradiente de um tom (ciano). */}
+      <View style={[styles.preview, previewGradientWeb]} />
 
       {/* Body */}
       <View style={styles.body}>
@@ -114,9 +108,8 @@ const styles = StyleSheet.create({
   },
   cardHover: { transform: [{ translateY: -4 }], borderColor: '#38bdf855' },
 
-  imageWrap: { width: '100%', height: 158, overflow: 'hidden', backgroundColor: '#15171c' },
-  image: { width: '100%', height: 158 },
-  imageZoom: { transform: [{ scale: 1.05 }] },
+  // Bloco de preview: gradiente ciano (web) / tom escuro azulado (nativo).
+  preview: { width: '100%', height: 158, backgroundColor: '#0e141c' },
 
   body: { flex: 1, flexDirection: 'column', padding: 20, paddingBottom: 22 },
   headerRow: {

@@ -54,7 +54,7 @@ export const projects: Project[] = [
   },
   {
     id: 'mypregiato',
-    name: 'myPregiato',
+    name: 'MyPregiato',
     shortDescription: 'Plataforma SaaS full-stack de gestão para agência de modelos — .NET 8 + React.',
     description:
       'Plataforma full-stack de gestão para agência de modelos — backend .NET 8 em Clean Architecture, SPA React + TypeScript, autenticação Clerk, mensageria, real-time e geração de documentos. Monorepo com deploy containerizado na Railway.',
