@@ -84,7 +84,7 @@ const EXPERIENCIAS: Experiencia[] = [
   },
   {
     accent: '#f5a623', mono: 'AC',
-    role: 'Engenheiro de Software .NET Pleno | ',
+    role: 'Engenheiro de Software .NET Pleno | BTG Pactual',
     roleEn: '.NET Developer (Mid-level)',
     company: 'act digital', type: 'Cliente: BTG Pactual',
     typeEn: 'Client: BTG Pactual',
@@ -153,8 +153,8 @@ const EXPERIENCIAS: Experiencia[] = [
   },
   {
     accent: '#fb7185', mono: 'IT',
-    role: 'Estagiário de Engenharia',
-    roleEn: 'Engineering Intern',
+    role: 'Estagiário Engenharia de Software',
+    roleEn: 'Software Engineering  Intern',
     company: 'Itaú Unibanco', type: 'Estágio',
     typeEn: 'Internship',
     period: 'set 2019 — jun 2021', duration: '1 ano 10 meses', location: 'Presencial',
