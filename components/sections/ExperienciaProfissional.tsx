@@ -37,9 +37,34 @@ interface Experiencia {
 
 const EXPERIENCIAS: Experiencia[] = [
   {
+    accent: '#38bdf8', mono: 'TIN',
+    role: 'Engenheiro de Software Full-Stack | InfoMoney',
+    roleEn: 'Full-Stack Software Engineer | InfoMoney',
+    company: 'InfoMoney', type: 'Tempo integral',
+    period: 'novembro de 2025 - julho de 2026', duration: '9 meses', location: 'São Paulo, Brasil · Híbrido',
+    summary:
+      'Atuei como engenheiro de software na equipe responsável pela evolução das plataformas digitais da InfoMoney, desenvolvendo soluções escaláveis para um dos maiores portais de conteúdo financeiro do Brasil. Participei de iniciativas para modernizar a arquitetura, desenvolver novos componentes, integrar sistemas e otimizar o desempenho.',
+    summaryEn:
+      'Worked as a software engineer in the team responsible for the digital platforms evolution at InfoMoney, developing scalable solutions for one of Brazil\'s largest financial content portals. Participated in initiatives to modernize architecture, develop new components, integrate systems, and optimize performance.',
+    bullets: [
+      'Projetei arquitetura e componentes escaláveis para as plataformas digitais da InfoMoney',
+      'Desenvolvi recursos como integração de noticias, conteúdo dinâmico e autenticação',
+      'Otimizei performance e integração de sistemas entre plataformas WordPress, Gutenberg e React Native',
+      'Implementei automações com IA (OpenCode, Copilot) para desenvolvimento acelerado'
+    ],
+    bulletsEn: [
+      'Designed scalable architecture and components for InfoMoney digital platforms',
+      'Developed features including news integration, dynamic content, and authentication',
+      'Optimized performance and system integration between WordPress, Gutenberg, and React Native platforms',
+      'Implemented AI automations (OpenCode, Copilot) for accelerated development'
+    ],
+    stack: ['React Native', 'TypeScript', 'JavaScript', 'Storybook', 'WordPress', 'Blocos do Gutenberg', 'HTML', 'CSS', 'PHP', 'OpenCode', 'Copilot'],
+  },
+  {
     accent: '#34d399', mono: 'PG',
-    role: 'Tech Services Lead',
-    company: 'PREGIATO', type: 'Freelance',
+    role: 'Engenheiro de Software Full-Stack',
+    roleEn: 'Full-Stack Software Engineer',
+    company: 'PREGIATO', type: 'PJ',
     period: 'jan 2025 — mai 2026', duration: '1 ano 5 meses', location: 'São Paulo ',
     summary:
       'Tech Lead de uma plataforma SaaS para agência de modelos — do design da arquitetura ao deploy em produção: cadastro de talentos, agendamentos, portfólio, contratos em PDF, autenticação e notificações via WhatsApp e e-mail.',
@@ -59,7 +84,7 @@ const EXPERIENCIAS: Experiencia[] = [
   },
   {
     accent: '#f5a623', mono: 'AC',
-    role: 'Desenvolvedor .NET Pleno',
+    role: 'Engenheiro de Software .NET Pleno | ',
     roleEn: '.NET Developer (Mid-level)',
     company: 'act digital', type: 'Cliente: BTG Pactual',
     typeEn: 'Client: BTG Pactual',
@@ -82,10 +107,10 @@ const EXPERIENCIAS: Experiencia[] = [
   },
   {
     accent: '#38bdf8', mono: 'MH',
-    role: 'Analista de API',
-    roleEn: 'API Analyst',
-    company: 'My Hunter', type: 'Cliente: Bradesco | API Studio',
-    typeEn: 'Client: Bradesco | API Studio',
+    role: 'Engenheiro de Software | API Analyst | Bradesco',
+    roleEn: 'Software Engineer | API Analyst',
+    company: 'My Hunter', type: 'Bradesco | API Studio',
+    typeEn: 'Bradesco | API Studio',
     period: 'set 2023 — jun 2024', duration: '10 meses', location: 'São Paulo · Híbrido',
     summary:
       'Integração end-to-end de APIs de pagamento do Bradesco para clientes estratégicos como Shopee, GringoPay e Globo, garantindo qualidade e estabilidade em produção.',
@@ -149,8 +174,8 @@ const EXPERIENCIAS: Experiencia[] = [
   },
   {
     accent: '#94a3b8', mono: 'MP',
-    role: 'Estagiário de TI',
-    roleEn: 'IT Intern',
+    role: 'Estagiário de Infraestrutura ',
+    roleEn: 'Infrastructure Intern',
     company: 'Moraes Pitombo Advogados', type: 'Meio período',
     typeEn: 'Part-time',
     period: 'jul 2018 — set 2019', duration: '1 ano 3 meses', location: 'São Paulo · No local',
