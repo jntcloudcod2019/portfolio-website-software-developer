@@ -43,3 +43,5 @@ yarn-error.*
 
 # Go dashboard (analytics viewer, not part of portfolio)
 /dashboard/
+.vercel
+.env*
