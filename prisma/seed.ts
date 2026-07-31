@@ -92,7 +92,7 @@ async function main() {
     }
 
     const totalPageviews = visitorPageviews.length;
-    const totalEvents = totalPageviews + randomInt(0, 3);
+    const totalEvents = randomInt(1, 3);
 
     await prisma.visitor.create({
       data: {
@@ -153,21 +153,9 @@ async function main() {
           timeOnPageMs: p < visitorPageviews.length - 1 ? randomInt(5000, 120000) : undefined,
         },
       });
-
-      await prisma.event.create({
-        data: {
-          sessionId,
-          visitorId,
-          type: 'pageview',
-          name: 'page_view',
-          target: pv.path,
-          timestamp: ts,
-          page: pv.path,
-        },
-      });
     }
 
-    const extraEvents = totalEvents - totalPageviews;
+    const extraEvents = randomInt(1, 3);
     for (let e = 0; e < extraEvents; e++) {
       const eventTypes = ['project_view', 'cv_download', 'contact_click', 'external_link'];
       const eventType = randomItem(eventTypes);

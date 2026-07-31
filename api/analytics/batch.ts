@@ -3,6 +3,11 @@ import { prisma } from '../_lib/prisma';
 import { lookupGeo } from '../_lib/geoip';
 import { parseUA } from '../_lib/ua';
 
+const STORED_EVENT_TYPES = new Set([
+  'cv_download', 'project_view', 'contact_click', 'external_link',
+  'scroll_depth', 'time_on_page', 'theme_toggle', 'custom',
+]);
+
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
@@ -24,14 +29,14 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     const now = new Date();
     const pageviewCount = events.filter((e: any) => e.type === 'pageview').length;
+    const storedEvents = events.filter((e: any) => STORED_EVENT_TYPES.has(e.type));
 
     await prisma.visitor.upsert({
       where: { visitorId },
       update: {
         lastSeen: now,
-        totalSessions: { increment: 0 },
         totalPageviews: { increment: pageviewCount },
-        totalEvents: { increment: events.length },
+        totalEvents: { increment: storedEvents.length },
         country: geo.country || undefined,
         region: geo.region || undefined,
         city: geo.city || undefined,
@@ -51,7 +56,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         firstSeen: now,
         lastSeen: now,
         totalPageviews: pageviewCount,
-        totalEvents: events.length,
+        totalEvents: storedEvents.length,
         language: profile?.language || 'unknown',
         deviceType,
         deviceModel,
@@ -96,7 +101,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       },
     });
 
-    const eventData = events.map((event: any) => ({
+    const eventData = storedEvents.map((event: any) => ({
       sessionId,
       visitorId,
       type: event.type,
@@ -128,7 +133,11 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       await prisma.pageView.createMany({ data: pageviewData });
     }
 
-    res.status(200).json({ ok: true, eventsStored: events.length });
+    res.status(200).json({
+      ok: true,
+      pageviewsStored: pageviewData.length,
+      eventsStored: eventData.length,
+    });
   } catch (err) {
     const msg = err instanceof Error ? err.message : String(err);
     console.error('[Analytics] batch error:', msg, err);
