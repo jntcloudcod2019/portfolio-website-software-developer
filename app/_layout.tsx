@@ -17,6 +17,7 @@ import { Text } from '@/components/ui/AppText';
 import { LikesProvider } from '@/context/LikesContext';
 import { AppConfigProvider } from '@/context/AppConfigContext';
 import { I18nProvider } from '@/context/I18nProvider';
+import { AnalyticsProvider } from '@/components/analytics/AnalyticsProvider';
 import { colors, spacing } from '@/constants/theme';
 import { NavHeader } from '@/components/layout/NavHeader';
 
@@ -38,6 +39,7 @@ export default function RootLayout() {
       <AppConfigProvider>
       <I18nProvider>
       <LikesProvider>
+      <AnalyticsProvider>
         <StatusBar style="light" />
         {showWebNavHeader && (
           <NavHeader
@@ -71,6 +73,7 @@ export default function RootLayout() {
             }}
           />
         </Stack>
+      </AnalyticsProvider>
       </LikesProvider>
       </I18nProvider>
       </AppConfigProvider>

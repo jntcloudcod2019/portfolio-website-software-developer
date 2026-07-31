@@ -1,0 +1,108 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model Visitor {
+  id               String    @id @default(auto()) @map("_id") @db.ObjectId
+  visitorId        String    @unique
+  firstSeen        DateTime
+  lastSeen         DateTime
+  totalSessions    Int       @default(0)
+  totalPageviews   Int       @default(0)
+  totalEvents      Int       @default(0)
+
+  country          String?
+  region           String?
+  city             String?
+  timezone         String?
+
+  language         String
+  deviceType       String
+  deviceModel      String?
+  deviceVendor     String?
+  os               String
+  browser          String
+  viewport         String?
+
+  ipHash           String?
+
+  utmSource        String?
+  utmMedium        String?
+  utmCampaign      String?
+
+  consentAnalytics Boolean   @default(false)
+  consentTimestamp  DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  sessions Session[]
+  pageviews PageView[]
+  events   Event[]
+}
+
+model Session {
+  id              String    @id @default(auto()) @map("_id") @db.ObjectId
+  sessionId       String    @unique
+  visitorId       String
+  startedAt       DateTime
+  endedAt         DateTime?
+  durationMs      Int?
+  entryPage       String
+  exitPage        String?
+  referrer        String?
+
+  deviceModel     String?
+  deviceVendor    String?
+  viewport        String?
+
+  utmSource       String?
+  utmMedium       String?
+  utmCampaign     String?
+
+  createdAt DateTime @default(now())
+
+  visitor   Visitor    @relation(fields: [visitorId], references: [visitorId])
+  pageviews PageView[]
+  events    Event[]
+}
+
+model PageView {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  sessionId   String
+  visitorId   String
+  path        String
+  title       String
+  timestamp   DateTime
+  referrer    String?
+
+  viewport    String?
+
+  loadTimeMs  Int?
+  scrollDepth Float?
+  timeOnPageMs Int?
+
+  visitor Visitor @relation(fields: [visitorId], references: [visitorId])
+  session Session @relation(fields: [sessionId], references: [sessionId])
+}
+
+model Event {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  sessionId String
+  visitorId String
+  type      String
+  name      String
+  target    String?
+  value     String?
+  metadata  String?
+  timestamp DateTime
+  page      String
+
+  visitor Visitor @relation(fields: [visitorId], references: [visitorId])
+  session Session @relation(fields: [sessionId], references: [sessionId])
+}
