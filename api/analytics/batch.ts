@@ -130,7 +130,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     res.status(200).json({ ok: true, eventsStored: events.length });
   } catch (err) {
-    console.error('[Analytics] batch error:', err);
-    res.status(500).json({ error: 'Internal server error' });
+    const msg = err instanceof Error ? err.message : String(err);
+    console.error('[Analytics] batch error:', msg, err);
+    res.status(500).json({ error: msg, hint: 'Check DATABASE_URL env and prisma generate' });
   }
 }
