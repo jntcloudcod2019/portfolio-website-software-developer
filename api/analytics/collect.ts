@@ -1,5 +1,5 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { prisma } from '../_lib/prisma';
+import { getDb } from '../_lib/prisma';
 import { lookupGeo } from '../_lib/geoip';
 import { parseUA } from '../_lib/ua';
 
@@ -31,104 +31,91 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const pageviewCount = events.filter((e: any) => e.type === 'pageview').length;
     const storedEvents = events.filter((e: any) => STORED_EVENT_TYPES.has(e.type));
 
-    await prisma.visitor.upsert({
-      where: { visitorId },
-      update: {
-        lastSeen: now,
-        totalPageviews: { increment: pageviewCount },
-        totalEvents: { increment: storedEvents.length },
-        country: geo.country || undefined,
-        region: geo.region || undefined,
-        city: geo.city || undefined,
-        timezone: geo.timezone || profile?.timezone || undefined,
-        language: profile?.language || undefined,
-        deviceType,
-        deviceModel: deviceModel || undefined,
-        deviceVendor: deviceVendor || undefined,
-        os,
-        browser,
-        viewport: profile?.viewport || undefined,
-        consentAnalytics: consent || undefined,
-        consentTimestamp: consent ? now : undefined,
+    const db = await getDb();
+
+    const visitorUpdate: Record<string, any> = { lastSeen: now };
+    if (geo.country) visitorUpdate.country = geo.country;
+    if (geo.region) visitorUpdate.region = geo.region;
+    if (geo.city) visitorUpdate.city = geo.city;
+    const timezoneVal = geo.timezone || profile?.timezone;
+    if (timezoneVal) visitorUpdate.timezone = timezoneVal;
+    if (profile?.language) visitorUpdate.language = profile.language;
+    visitorUpdate.deviceType = deviceType;
+    if (deviceModel) visitorUpdate.deviceModel = deviceModel;
+    if (deviceVendor) visitorUpdate.deviceVendor = deviceVendor;
+    if (os) visitorUpdate.os = os;
+    if (browser) visitorUpdate.browser = browser;
+    if (profile?.viewport) visitorUpdate.viewport = profile.viewport;
+    if (consent) {
+      visitorUpdate.consentAnalytics = true;
+      visitorUpdate.consentTimestamp = now;
+    }
+
+    await db.collection('Visitor').updateOne(
+      { visitorId },
+      {
+        $set: visitorUpdate,
+        $inc: { totalPageviews: pageviewCount, totalEvents: storedEvents.length },
+        $setOnInsert: {
+          visitorId,
+          firstSeen: now,
+          utmSource: utm?.source || null,
+          utmMedium: utm?.medium || null,
+          utmCampaign: utm?.campaign || null,
+        },
       },
-      create: {
-        visitorId,
-        firstSeen: now,
-        lastSeen: now,
-        totalPageviews: pageviewCount,
-        totalEvents: storedEvents.length,
-        language: profile?.language || 'unknown',
-        deviceType,
-        deviceModel,
-        deviceVendor,
-        os,
-        browser,
-        viewport: profile?.viewport || null,
-        country: geo.country,
-        region: geo.region,
-        city: geo.city,
-        timezone: geo.timezone || profile?.timezone,
-        utmSource: utm?.source || null,
-        utmMedium: utm?.medium || null,
-        utmCampaign: utm?.campaign || null,
-        consentAnalytics: consent || false,
-        consentTimestamp: consent ? now : undefined,
-      },
-    });
+      { upsert: true },
+    );
 
     const firstEvent = events[0];
-    await prisma.session.upsert({
-      where: { sessionId },
-      update: {
-        endedAt: now,
-        exitPage: events[events.length - 1]?.page || undefined,
-        deviceModel: deviceModel || undefined,
-        deviceVendor: deviceVendor || undefined,
-        viewport: profile?.viewport || undefined,
-      },
-      create: {
-        sessionId,
-        visitorId,
-        startedAt: new Date(firstEvent?.timestamp || Date.now()),
-        entryPage: firstEvent?.page || '/',
-        referrer: referrer || undefined,
-        deviceModel,
-        deviceVendor,
-        viewport: profile?.viewport || null,
-        utmSource: utm?.source || null,
-        utmMedium: utm?.medium || null,
-        utmCampaign: utm?.campaign || null,
-      },
-    });
+    const sessionUpdate: Record<string, any> = { endedAt: now };
+    sessionUpdate.exitPage = events[events.length - 1]?.page || null;
+    if (deviceModel) sessionUpdate.deviceModel = deviceModel;
+    if (deviceVendor) sessionUpdate.deviceVendor = deviceVendor;
+    if (profile?.viewport) sessionUpdate.viewport = profile.viewport;
 
-    for (const event of storedEvents) {
-      await prisma.event.create({
-        data: {
+    await db.collection('Session').updateOne(
+      { sessionId },
+      {
+        $set: sessionUpdate,
+        $setOnInsert: {
           sessionId,
           visitorId,
-          type: event.type,
-          name: event.name,
-          target: event.target,
-          value: event.value,
-          metadata: event.metadata ? JSON.stringify(event.metadata) : undefined,
-          timestamp: new Date(event.timestamp || Date.now()),
-          page: event.page,
+          startedAt: new Date(firstEvent?.timestamp || Date.now()),
+          entryPage: firstEvent?.page || '/',
+          referrer: referrer || null,
+          utmSource: utm?.source || null,
+          utmMedium: utm?.medium || null,
+          utmCampaign: utm?.campaign || null,
         },
+      },
+      { upsert: true },
+    );
+
+    for (const event of storedEvents) {
+      await db.collection('Event').insertOne({
+        sessionId,
+        visitorId,
+        type: event.type,
+        name: event.name,
+        target: event.target || null,
+        value: event.value || null,
+        metadata: event.metadata ? JSON.stringify(event.metadata) : null,
+        timestamp: new Date(event.timestamp || Date.now()),
+        page: event.page,
       });
     }
 
     for (const event of events) {
       if (event.type === 'pageview') {
-        await prisma.pageView.create({
-          data: {
-            sessionId,
-            visitorId,
-            path: event.target || event.page,
-            title: event.value || '',
-            timestamp: new Date(event.timestamp || Date.now()),
-            referrer: referrer || undefined,
-            viewport: profile?.viewport || null,
-          },
+        await db.collection('PageView').insertOne({
+          sessionId,
+          visitorId,
+          path: event.target || event.page,
+          title: event.value || '',
+          timestamp: new Date(event.timestamp || Date.now()),
+          referrer: referrer || null,
+          viewport: profile?.viewport || null,
         });
       }
     }
@@ -141,6 +128,6 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   } catch (err) {
     const msg = err instanceof Error ? err.message : String(err);
     console.error('[Analytics] collect error:', msg, err);
-    res.status(500).json({ error: msg, hint: 'Check DATABASE_URL env and prisma generate' });
+    res.status(500).json({ error: msg, hint: 'Check DATABASE_URL env' });
   }
 }
