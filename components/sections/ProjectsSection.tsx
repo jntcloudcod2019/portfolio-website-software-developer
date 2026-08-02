@@ -41,7 +41,7 @@ export function ProjectsSection({ sectionRef }: { sectionRef?: React.Ref<View> }
           ]}
           onPress={() => router.push('/projects')}
         >
-          <Text style={styles.moreButtonText}>Mais Projetos</Text>
+          <Text style={styles.moreButtonText}>{t('projects_more')}</Text>
           <Text style={styles.moreButtonArrow}>→</Text>
         </Pressable>
       </View>

@@ -17,7 +17,6 @@ import { Text } from '@/components/ui/AppText';
 import { LikesProvider } from '@/context/LikesContext';
 import { AppConfigProvider } from '@/context/AppConfigContext';
 import { I18nProvider } from '@/context/I18nProvider';
-import { AnalyticsProvider } from '@/components/analytics/AnalyticsProvider';
 import { colors, spacing } from '@/constants/theme';
 import { NavHeader } from '@/components/layout/NavHeader';
 
@@ -39,7 +38,6 @@ export default function RootLayout() {
       <AppConfigProvider>
       <I18nProvider>
       <LikesProvider>
-      <AnalyticsProvider>
         <StatusBar style="light" />
         {showWebNavHeader && (
           <NavHeader
@@ -72,8 +70,15 @@ export default function RootLayout() {
               headerLeft: () => <BackButton />,
             }}
           />
+          <Stack.Screen
+            name="estudo/inteligencia-agentica"
+            options={{
+              title: 'Estudo',
+              headerShown: Platform.OS !== 'web',
+              headerLeft: () => <BackButton />,
+            }}
+          />
         </Stack>
-      </AnalyticsProvider>
       </LikesProvider>
       </I18nProvider>
       </AppConfigProvider>

@@ -8,7 +8,7 @@
   "about_role": "Engenheiro de Software Full Stack",
   "about_stack": "C# · .NET · Node.js · AWS · Azure · PostgreSQL",
   "about_local": "São Paulo",
-  "about_bio": "Engenheiro de Software com mais de 6 anos de experiência no mercado financeiro e bancário, especializado em construir sistemas robustos e escaláveis. Atuei em domínios críticos como Risco de Crédito Regulatório, Risco de Mercado, Pricing, Liquidez, APIs de Pagamentos e Chargeback — entregando soluções que movimentam operações financeiras reais. Contribuí para a evolução de plataformas Legacy para Cloud.\n\nPerfil hands-on com visão de arquitetura, contribuindo para o desenvolvimento de aplicações de alta disponibilidade e seguras.",
+  "about_bio": "Engenheiro de Software com 5 anos de experiência no desenvolvimento de sistemas para o mercado financeiro, atuando em domínios críticos (core banking) com API de pagamentos (Pix, boleto, crédito, débito, financiamentos, chargeback), precificação de ativos, risco de mercado e liquidez. Possuo sólidos cases de sucesso em evolução de plataformas, migração de código legado para a nuvem (cloud) e gestão de projetos sob metodologias ágeis (Scrum e Kanban). Apresento um perfil eminentemente hands-on, combinando uma forte visão arquitetônica e prática para projetar e entregar aplicações altamente disponíveis, escaláveis e seguras. Atualmente, estou profundamente imerso nos ecossistemas de IA generativa, com foco em metodologias de engenharia de software assistida por inteligência artificial para otimização de fluxos de desenvolvimento.",
   "section_experience": "EXPERIÊNCIA PROFISSIONAL",
   "section_projects": "PROJETOS",
   "section_studies": "ESTUDOS & ARTIGOS",
@@ -54,8 +54,8 @@
   "lp_arch_data_i1_sub": "Contracts · Models · Producers",
   "lp_arch_data_i2_sub": "bytea PDF · UUIDs · Scoped DI",
   "lp_arch_data_i3_sub": "Async/await · env vars config",
+  "projects_more": "Mais Projetos",
   "projects_all_title": "Todos os Projetos",
-  "projects_all_count": "{{n}} projetos disponíveis",
   "proj_conversor_short": "Conversor em tempo real com a Free Currency API.",
   "proj_conversor_desc": "Conversor de moedas que consome a Free Currency API para obter taxas de câmbio atualizadas em tempo real.",
   "proj_lambda_short": "Integrador assíncrono de contratos digitais em C#/.NET 8 com RabbitMQ e Authentique.",
@@ -64,12 +64,6 @@
   "proj_mypregiato_desc": "Plataforma full-stack de gestão para agência de modelos — backend .NET 8 em Clean Architecture, SPA React + TypeScript, autenticação Clerk, mensageria, real-time e geração de documentos. Monorepo com deploy containerizado na Railway.",
   "study_type_course": "Curso",
   "study_type_article": "Artigo",
-  "study_cloud_title": "Cloud Architecture Fundamentals",
-  "study_cloud_desc": "Fundamentos de arquitetura em AWS e Azure.",
-  "study_rn_title": "React Native — Documentação oficial",
-  "study_rn_desc": "Guias e referência para desenvolvimento mobile.",
-  "study_ef_title": "Entity Framework Core",
-  "study_ef_desc": "ORM e migrations em .NET.",
-  "study_rabbit_title": "RabbitMQ Tutorials",
-  "study_rabbit_desc": "Mensageria e padrões de filas."
+  "study_agentica_title": "Inteligência Autônoma em Ecossistemas de Multiagentes e Kubernetes",
+  "study_agentica_desc": "AIOps, sistemas multi-agentes, Kubernetes autônomo e GraphRAG aplicados à operação de infraestrutura."
 }

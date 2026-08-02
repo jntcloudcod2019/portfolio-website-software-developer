@@ -8,7 +8,7 @@
   "about_role": "Full Stack Software Engineer",
   "about_stack": "C# · .NET · Node.js · AWS · Azure · PostgreSQL",
   "about_local": "São Paulo · Remote",
-  "about_bio": "Software Engineer with over 6 years of experience in the financial and banking market, specialized in building robust and scalable systems. I have worked in critical domains such as Regulatory Credit Risk, Market Risk, Pricing, Liquidity, Payment APIs and Chargeback — delivering solutions that drive real financial operations. I contributed to the evolution of Legacy platforms to Cloud.\n\nHands-on profile with an architectural vision, contributing to the development of highly available and secure applications.",
+  "about_bio": "Software Engineer with 5 years of experience building systems for the financial market, working in critical domains (core banking) with payment APIs (Pix, boleto, credit, debit, financing, chargeback), asset pricing, market risk and liquidity. I have solid success cases in platform evolution, migrating legacy code to the cloud, and managing projects under agile methodologies (Scrum and Kanban). I bring an eminently hands-on profile, combining a strong architectural vision and practical execution to design and deliver highly available, scalable and secure applications. Currently, I am deeply immersed in generative AI ecosystems, focused on AI-assisted software engineering methodologies to optimize development workflows.",
   "section_experience": "PROFESSIONAL EXPERIENCE",
   "section_projects": "PROJECTS",
   "section_studies": "STUDIES & ARTICLES",
@@ -54,8 +54,8 @@
   "lp_arch_data_i1_sub": "Contracts · Models · Producers",
   "lp_arch_data_i2_sub": "bytea PDF · UUIDs · Scoped DI",
   "lp_arch_data_i3_sub": "Async/await · env vars config",
+  "projects_more": "More Projects",
   "projects_all_title": "All Projects",
-  "projects_all_count": "{{n}} projects available",
   "proj_conversor_short": "Real-time converter powered by the Free Currency API.",
   "proj_conversor_desc": "Currency converter that consumes the Free Currency API to fetch exchange rates updated in real time.",
   "proj_lambda_short": "Asynchronous digital contract integrator in C#/.NET 8 with RabbitMQ and Authentique.",
@@ -64,12 +64,6 @@
   "proj_mypregiato_desc": "Full-stack management platform for a modeling agency — .NET 8 backend in Clean Architecture, React + TypeScript SPA, Clerk authentication, messaging, real-time and document generation. Monorepo with containerized deploy on Railway.",
   "study_type_course": "Course",
   "study_type_article": "Article",
-  "study_cloud_title": "Cloud Architecture Fundamentals",
-  "study_cloud_desc": "Architecture fundamentals on AWS and Azure.",
-  "study_rn_title": "React Native — Official documentation",
-  "study_rn_desc": "Guides and reference for mobile development.",
-  "study_ef_title": "Entity Framework Core",
-  "study_ef_desc": "ORM and migrations in .NET.",
-  "study_rabbit_title": "RabbitMQ Tutorials",
-  "study_rabbit_desc": "Messaging and queue patterns."
+  "study_agentica_title": "Autonomous Intelligence in Multi-Agent and Kubernetes Ecosystems",
+  "study_agentica_desc": "AIOps, multi-agent systems, autonomous Kubernetes and GraphRAG applied to infrastructure operations."
 }

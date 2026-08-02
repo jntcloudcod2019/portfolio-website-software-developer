@@ -3,6 +3,7 @@ import {
 import Head from 'expo-router/head';
 import React from 'react';
 import {
+  Platform,
   Pressable,
   ScrollView,
   StyleSheet,
@@ -37,12 +38,12 @@ export default function AllProjectsScreen() {
         <meta property="og:url" content={`https://jonathanfsilva.dev/projects`} />
       </Head>
       <View style={styles.screen}>
-        <ScrollView style={styles.scroll} contentContainerStyle={styles.content}>
+        <ScrollView
+          style={styles.scroll}
+          contentContainerStyle={[styles.content, Platform.OS === 'web' && styles.contentWeb]}
+        >
           <View style={styles.headerBlock}>
             <Text style={styles.heading}>{t('projects_all_title')}</Text>
-            <Text style={styles.subheading}>
-              {t('projects_all_count', { n: projects.length })}
-            </Text>
           </View>
 
           <View style={[styles.grid, isWide && styles.gridWide]}>
@@ -72,6 +73,9 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     width: '100%',
   },
+  contentWeb: {
+    paddingTop: 54 + spacing.xl, // extra top offset for fixed nav (54px)
+  } as object,
   headerBlock: {
     alignItems: 'center',
     marginBottom: 38,
@@ -81,12 +85,6 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     color: '#e8eaed',
     letterSpacing: -0.02,
-    marginBottom: 8,
-    textAlign: 'center',
-  },
-  subheading: {
-    fontSize: 15,
-    color: '#9aa0a8',
     textAlign: 'center',
   },
   grid: {

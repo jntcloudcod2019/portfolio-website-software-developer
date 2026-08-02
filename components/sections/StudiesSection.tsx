@@ -1,3 +1,4 @@
+import { useRouter } from 'expo-router';
 import React from 'react';
 import { Linking, Platform, Pressable, StyleSheet, View } from 'react-native';
 import { Text } from '@/components/ui/AppText';
@@ -40,6 +41,7 @@ function SectionHeader() {
 // ─── Study Card ───────────────────────────────────────────────────────────────
 
 function StudyCard({ item }: { item: LocalizedStudy }) {
+  const router = useRouter();
   const transitionWeb: object =
     Platform.OS === 'web' ? { transition: 'border-color 0.18s ease, transform 0.18s ease' } : {};
   const cardBgWeb: object =
@@ -58,7 +60,9 @@ function StudyCard({ item }: { item: LocalizedStudy }) {
         transitionWeb as object,
         pressed && styles.studyCardPressed,
       ]}
-      onPress={() => Linking.openURL(item.url)}
+      onPress={() =>
+        item.route ? router.push(item.route as never) : Linking.openURL(item.url)
+      }
     >
       <View style={styles.studyHeader}>
         <Text style={[styles.studyType, { fontFamily: MONO }]}>{item.typeLabel}</Text>
