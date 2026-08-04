@@ -20,13 +20,22 @@ import { ProjectCard } from '@/components/projects/ProjectCard';
 import { SeoHead } from '@/components/seo/SeoHead';
 import { absoluteUrl } from '@/constants/seo';
 
+const MONO = Platform.select({
+  web: '"JetBrains Mono", "Courier New", monospace',
+  ios: 'Courier',
+  android: 'monospace',
+  default: 'monospace',
+});
+
 const COPY = {
   pt: {
     title: 'Projetos',
+    back: '← Voltar',
     desc: 'Projetos de engenharia de software de Jonathan F. Silva: plataformas SaaS em .NET 8, integradores assíncronos com RabbitMQ e aplicações React Native.',
   },
   en: {
     title: 'Projects',
+    back: '← Back',
     desc: 'Software engineering projects by Jonathan F. Silva: SaaS platforms in .NET 8, asynchronous integrators with RabbitMQ and React Native applications.',
   },
 } as const;
@@ -76,6 +85,16 @@ export default function AllProjectsScreen() {
           style={styles.scroll}
           contentContainerStyle={[styles.content, Platform.OS === 'web' && styles.contentWeb]}
         >
+          {/* Volta para de onde veio; num acesso direto à URL não há histórico,
+              então cai na home. */}
+          <Pressable
+            onPress={() => (router.canGoBack() ? router.back() : router.push('/'))}
+            style={({ pressed }) => [styles.backLink, pressed && styles.backLinkPressed]}
+            accessibilityRole="button"
+          >
+            <Text style={[styles.backText, { fontFamily: MONO }]}>{copy.back}</Text>
+          </Pressable>
+
           <View style={styles.headerBlock}>
             <Text style={styles.heading}>{t('projects_all_title')}</Text>
           </View>
@@ -110,6 +129,19 @@ const styles = StyleSheet.create({
   contentWeb: {
     paddingTop: 54 + spacing.xl, // extra top offset for fixed nav (54px)
   } as object,
+  backLink: {
+    alignSelf: 'flex-start',
+    paddingVertical: 4,
+    marginBottom: 20,
+  },
+  backLinkPressed: {
+    opacity: 0.6,
+  },
+  backText: {
+    fontSize: 12,
+    color: '#5b616b',
+    letterSpacing: 0.7,
+  },
   headerBlock: {
     alignItems: 'center',
     marginBottom: 38,
