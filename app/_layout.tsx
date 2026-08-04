@@ -18,7 +18,7 @@ import { LikesProvider } from '@/context/LikesContext';
 import { AppConfigProvider } from '@/context/AppConfigContext';
 import { I18nProvider } from '@/context/I18nProvider';
 import { colors, spacing } from '@/constants/theme';
-import { NavHeader } from '@/components/layout/NavHeader';
+import { NavHeader, type SectionKey } from '@/components/layout/NavHeader';
 
 export default function RootLayout() {
   const router = useRouter();
@@ -30,8 +30,12 @@ export default function RootLayout() {
     </Pressable>
   );
 
-  const isProjectRoute = pathname.startsWith('/project') || pathname === '/projects';
-  const showWebNavHeader = Platform.OS === 'web' && isProjectRoute;
+  // O header é padrão em todas as páginas web. A home é a exceção: ela monta o
+  // próprio NavHeader porque precisa do scroll-spy entre as seções.
+  const isHome = pathname === '/' || pathname === '/index';
+  const showWebNavHeader = Platform.OS === 'web' && !isHome;
+
+  const activeSection: SectionKey = pathname.startsWith('/estudo') ? 'studies' : 'projects';
 
   return (
     <GestureHandlerRootView style={styles.root}>
@@ -41,7 +45,7 @@ export default function RootLayout() {
         <StatusBar style="light" />
         {showWebNavHeader && (
           <NavHeader
-            activeSection="projects"
+            activeSection={activeSection}
             onNavigate={() => router.push('/')}
           />
         )}

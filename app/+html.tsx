@@ -1,39 +1,64 @@
 import { ScrollViewStyleReset } from 'expo-router/html';
 import type { PropsWithChildren } from 'react';
 
+import { SITE_URL, SITE_NAME, SITE_DESC, OG_IMAGE, OG_IMAGE_W, OG_IMAGE_H, OG_IMAGE_ALT } from '@/constants/seo';
+import { portfolio } from '@/content/portfolio';
+
 // ─── Constantes ───────────────────────────────────────────────────────────────
 
-const SITE_URL   = 'https://jonathanfsilva.dev';
-const SITE_NAME  = 'Jonathan F. Silva | Software Engineer';
-const SITE_DESC  = 'Portfólio de Jonathan F. Silva — Engenheiro de Software Full Stack especializado em sistemas financeiros, .NET, Node.js, Cloud e alta disponibilidade.';
-const OG_IMAGE   = 'https://images.unsplash.com/photo-1580519542036-c47de6196ba5?w=1200&h=630&fit=crop&fm=jpg';
-const OG_IMAGE_W = '1200';
-const OG_IMAGE_H = '630';
 const AUTHOR_NAME = 'Jonathan F. Silva';
 const AUTHOR_JOB_TITLE = 'Software Engineer';
-const AUTHOR_GITHUB = 'https://github.com/jonathanf';
 
 // ─── JSON-LD Structured Data ──────────────────────────────────────────────────
+// `sameAs` sai de content/portfolio.ts para não divergir dos links de contato.
+
+const PERSON_ID = `${SITE_URL}/#person`;
 
 const JSON_LD = {
   '@context': 'https://schema.org',
   '@graph': [
     {
       '@type': 'Person',
+      '@id': PERSON_ID,
       name: AUTHOR_NAME,
       jobTitle: AUTHOR_JOB_TITLE,
       url: SITE_URL,
+      image: OG_IMAGE,
+      email: `mailto:${portfolio.contact.email}`,
+      knowsAbout: [
+        'C#', '.NET', 'ASP.NET Core', 'Node.js', 'TypeScript', 'React',
+        'AWS', 'Azure', 'Kubernetes', 'Docker', 'RabbitMQ', 'PostgreSQL',
+        'Microservices', 'Domain-Driven Design', 'Event-Driven Architecture',
+        'Site Reliability Engineering', 'Payment APIs', 'Market Risk',
+      ],
+      address: {
+        '@type': 'PostalAddress',
+        addressLocality: 'São Paulo',
+        addressRegion: 'SP',
+        addressCountry: 'BR',
+      },
       sameAs: [
-        AUTHOR_GITHUB,
-        'https://linkedin.com/in/jonathanfsilva',
+        portfolio.contact.github,
+        portfolio.contact.linkedin,
       ],
     },
     {
       '@type': 'WebSite',
+      '@id': `${SITE_URL}/#website`,
       name: SITE_NAME,
       url: SITE_URL,
       description: SITE_DESC,
-      author: { '@id': `${SITE_URL}/#person` },
+      inLanguage: ['pt-BR', 'en'],
+      author: { '@id': PERSON_ID },
+      publisher: { '@id': PERSON_ID },
+    },
+    {
+      '@type': 'ProfilePage',
+      '@id': `${SITE_URL}/#profilepage`,
+      url: SITE_URL,
+      name: SITE_NAME,
+      about: { '@id': PERSON_ID },
+      isPartOf: { '@id': `${SITE_URL}/#website` },
     },
   ],
 };
@@ -117,8 +142,12 @@ export default function Root({ children }: PropsWithChildren) {
         <meta name="robots" content="index, follow" />
         <meta name="theme-color" content="#08090b" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
-        <link rel="canonical" href={SITE_URL} />
+        <meta name="author" content={AUTHOR_NAME} />
         <link rel="apple-touch-icon" href={FAVICON_URI} />
+        {/* Sem <link rel="canonical"> aqui: este shell é servido para TODAS as rotas
+            (vercel.json reescreve tudo para /index.html). Um canonical fixo diria ao
+            Google que /projects, /estudo/... são duplicatas da home. Cada rota
+            declara o seu próprio via <Head>. */}
 
         {/* ── Open Graph ──────────────────────────────────────────────── */}
         <meta property="og:type" content="website" />
@@ -130,22 +159,29 @@ export default function Root({ children }: PropsWithChildren) {
         <meta property="og:image" content={OG_IMAGE} />
         <meta property="og:image:width" content={OG_IMAGE_W} />
         <meta property="og:image:height" content={OG_IMAGE_H} />
-        <meta property="og:image:alt" content="Jonathan F. Silva — Engenheiro de Software Full Stack" />
+        <meta property="og:image:alt" content={OG_IMAGE_ALT} />
 
         {/* ── Twitter Card ────────────────────────────────────────────── */}
-        <meta name="twitter:card" content="summary_large_image" />
+        {/* `summary` e não `summary_large_image`: a foto é retrato (800×1265) e
+            num card largo sairia cortada nas bordas. */}
+        <meta name="twitter:card" content="summary" />
         <meta name="twitter:title" content={SITE_NAME} />
         <meta name="twitter:description" content={SITE_DESC} />
         <meta name="twitter:image" content={OG_IMAGE} />
-        <meta name="twitter:image:alt" content="Jonathan F. Silva — Engenheiro de Software Full Stack" />
+        <meta name="twitter:image:alt" content={OG_IMAGE_ALT} />
 
         <ScrollViewStyleReset />
 
         {/* Substitui o favicon.ico padrão pelo ícone </> via script */}
         <script dangerouslySetInnerHTML={{ __html: FAVICON_SCRIPT }} />
 
-        {/* Structured Data / JSON-LD */}
-        <script dangerouslySetInnerHTML={{ __html: JSON_LD_STR }} />
+        {/* Structured Data / JSON-LD.
+            O `type` é obrigatório: sem ele o navegador tenta executar o JSON como
+            JavaScript e os crawlers não reconhecem o bloco como dados estruturados. */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON_LD_STR }}
+        />
       </head>
       <body>{children}</body>
     </html>

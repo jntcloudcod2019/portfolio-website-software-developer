@@ -1,7 +1,6 @@
 import {
   useLocalSearchParams,
   useRouter } from 'expo-router';
-import Head from 'expo-router/head';
 import React from 'react';
 import {
   Platform,
@@ -17,6 +16,8 @@ import { projectComponents } from '@/components/projetos';
 import { colors, spacing } from '@/constants/theme';
 import { useLocalizedProject } from '@/hooks/useLocalizedContent';
 import { useLikes } from '@/context/LikesContext';
+import { SeoHead } from '@/components/seo/SeoHead';
+import { absoluteUrl } from '@/constants/seo';
 
 const MONO = Platform.select({
   web: '"JetBrains Mono", "Courier New", monospace',
@@ -34,6 +35,13 @@ export default function ProjectDetailScreen() {
   if (!project) {
     return (
       <View style={styles.centered}>
+        {/* Estado de "não encontrado" não deve entrar no índice. */}
+        <SeoHead
+          title="Projeto não encontrado"
+          description="O projeto solicitado não existe."
+          path="/projects"
+          noindex
+        />
         <Text style={styles.errorText}>Projeto não encontrado.</Text>
       </View>
     );
@@ -42,21 +50,30 @@ export default function ProjectDetailScreen() {
   const likes = getLikes(project.id);
   const InteractiveComponent = projectComponents[project.componentId ?? ''];
 
-  const pageTitle = `${project.name} | Jonathan F. Silva`;
+  const seo = (
+    <SeoHead
+      title={project.name}
+      description={project.shortDescription}
+      path={`/project/${project.id}`}
+      jsonLd={{
+        '@context': 'https://schema.org',
+        '@type': 'SoftwareSourceCode',
+        name: project.name,
+        description: project.description,
+        url: absoluteUrl(`/project/${project.id}`),
+        programmingLanguage: project.stack,
+        author: { '@type': 'Person', name: 'Jonathan F. Silva' },
+        ...(project.github ? { codeRepository: project.github } : {}),
+      }}
+    />
+  );
 
   // Full-bleed: o componente renderiza a página inteira (hero próprio), sem o
   // título/descrição/stack padrão do detalhe.
   if (project.fullBleed && InteractiveComponent) {
     return (
       <>
-        <Head>
-          <title>{pageTitle}</title>
-          <meta name="description" content={project.shortDescription} />
-          <meta property="og:title" content={pageTitle} />
-          <meta property="og:description" content={project.shortDescription} />
-          <meta property="og:image" content={project.imageUrl} />
-          <meta property="og:url" content={`https://jonathanfsilva.dev/project/${project.id}`} />
-        </Head>
+        {seo}
         <View style={styles.screen}>
           <ScrollView style={styles.scroll} contentContainerStyle={styles.fullContent}>
             {Platform.OS === 'web' && (
@@ -73,14 +90,7 @@ export default function ProjectDetailScreen() {
 
   return (
     <>
-      <Head>
-        <title>{pageTitle}</title>
-        <meta name="description" content={project.shortDescription} />
-        <meta property="og:title" content={pageTitle} />
-        <meta property="og:description" content={project.shortDescription} />
-        <meta property="og:image" content={project.imageUrl} />
-        <meta property="og:url" content={`https://jonathanfsilva.dev/project/${project.id}`} />
-      </Head>
+      {seo}
       <View style={styles.screen}>
         <ScrollView style={styles.scroll} contentContainerStyle={styles.content}>
           {Platform.OS === 'web' && (

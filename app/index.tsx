@@ -1,6 +1,9 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { Platform, ScrollView, StyleSheet, View } from 'react-native';
 
+import { useI18n } from '@/context/I18nProvider';
+import { SeoHead } from '@/components/seo/SeoHead';
+import { SITE_DESC, SITE_DESC_EN, SITE_NAME } from '@/constants/seo';
 import { AboutSection } from '@/components/sections/AboutSection';
 import { NavHeader, type SectionKey } from '@/components/layout/NavHeader';
 import { ScrollBar } from '@/components/layout/ScrollBar';
@@ -9,6 +12,8 @@ import { colors } from '@/constants/theme';
 import { SECTION_ORDER, useSectionScroll } from '@/hooks/useSectionScroll';
 
 export default function HomeScreen() {
+  const { currentLanguage } = useI18n();
+  const isEn = currentLanguage === 'en';
   const { scrollRef, setSectionRef, scrollToSection, sectionDomRefs } = useSectionScroll();
   const [activeSection, setActiveSection] = useState<SectionKey>('about');
   const [scrollY, setScrollY] = useState(0);
@@ -96,6 +101,13 @@ export default function HomeScreen() {
 
       <NavHeader activeSection={activeSection} onNavigate={scrollToSection} />
       <ScrollBar scrollY={scrollY} contentHeight={contentHeight} />
+
+      <SeoHead
+        title={SITE_NAME}
+        description={isEn ? SITE_DESC_EN : SITE_DESC}
+        path="/"
+        locale={isEn ? 'en_US' : 'pt_BR'}
+      />
     </View>
   );
 }

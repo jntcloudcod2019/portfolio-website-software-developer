@@ -7,7 +7,17 @@ const htmlPath  = path.join(distDir, 'index.html');
 const sitemapPath = path.join(distDir, 'sitemap.xml');
 const robotsPath  = path.join(distDir, 'robots.txt');
 
-const SITE_URL = 'https://jonathanfsilva.dev';
+// Lê o SITE_URL de constants/seo.ts para não duplicar o domínio em dois lugares.
+const seoPath = path.join(__dirname, '../constants/seo.ts');
+const SITE_URL = (() => {
+  // Âncora `^` para não casar com a menção em comentário no topo do arquivo.
+  const m = fs.readFileSync(seoPath, 'utf-8').match(/^export const SITE_URL\s*=\s*'([^']+)'/m);
+  if (!m) throw new Error('postbuild: SITE_URL não encontrado em constants/seo.ts');
+  if (!/^https?:\/\//.test(m[1])) {
+    throw new Error(`postbuild: SITE_URL inválido ("${m[1]}") — esperado http(s)://…`);
+  }
+  return m[1];
+})();
 
 // ─── Favicon ──────────────────────────────────────────────────────────────────
 const svg = [
@@ -44,12 +54,25 @@ try {
   console.warn('  ⚠  Não foi possível ler content/projects.ts');
 }
 
+// Rotas de estudo declaradas em app/estudo/*.tsx (o sitemap antigo as ignorava).
+const estudoDir = path.join(__dirname, '../app/estudo');
+let estudoRoutes = [];
+try {
+  estudoRoutes = fs
+    .readdirSync(estudoDir)
+    .filter((f) => f.endsWith('.tsx') && !f.startsWith('_') && !f.startsWith('+'))
+    .map((f) => `/estudo/${f.replace(/\.tsx$/, '')}`);
+} catch {
+  console.warn('  ⚠  Não foi possível ler app/estudo/');
+}
+
 const today = new Date().toISOString().split('T')[0];
 
 const urls = [
-  { loc: '/', priority: '1.0' },
-  { loc: '/projects', priority: '0.8' },
-  ...projectIds.map((id) => ({ loc: `/project/${id}`, priority: '0.6' })),
+  { loc: '/',         priority: '1.0', changefreq: 'monthly' },
+  { loc: '/projects', priority: '0.8', changefreq: 'monthly' },
+  ...projectIds.map((id) => ({ loc: `/project/${id}`, priority: '0.6', changefreq: 'yearly' })),
+  ...estudoRoutes.map((loc) => ({ loc, priority: '0.7', changefreq: 'yearly' })),
 ];
 
 const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
@@ -57,7 +80,7 @@ const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
 ${urls
   .map(
     (u) =>
-      `  <url>\n    <loc>${SITE_URL}${u.loc}</loc>\n    <lastmod>${today}</lastmod>\n    <priority>${u.priority}</priority>\n  </url>`
+      `  <url>\n    <loc>${SITE_URL}${u.loc}</loc>\n    <lastmod>${today}</lastmod>\n    <changefreq>${u.changefreq}</changefreq>\n    <priority>${u.priority}</priority>\n  </url>`
   )
   .join('\n')}
 </urlset>

@@ -1,6 +1,5 @@
 import {
   useRouter } from 'expo-router';
-import Head from 'expo-router/head';
 import React from 'react';
 import {
   Platform,
@@ -15,28 +14,63 @@ import { Text } from '@/components/ui/AppText';
 import { useTranslation } from 'react-i18next';
 
 import { colors, spacing } from '@/constants/theme';
+import { useI18n } from '@/context/I18nProvider';
 import { useLocalizedProjects } from '@/hooks/useLocalizedContent';
 import { ProjectCard } from '@/components/projects/ProjectCard';
+import { SeoHead } from '@/components/seo/SeoHead';
+import { absoluteUrl } from '@/constants/seo';
 
-const PAGE_TITLE = 'Projetos | Jonathan F. Silva';
-const PAGE_DESC = 'Portfólio de projetos de Jonathan F. Silva — Engenheiro de Software Full Stack.';
+const COPY = {
+  pt: {
+    title: 'Projetos',
+    desc: 'Projetos de engenharia de software de Jonathan F. Silva: plataformas SaaS em .NET 8, integradores assíncronos com RabbitMQ e aplicações React Native.',
+  },
+  en: {
+    title: 'Projects',
+    desc: 'Software engineering projects by Jonathan F. Silva: SaaS platforms in .NET 8, asynchronous integrators with RabbitMQ and React Native applications.',
+  },
+} as const;
 
 export default function AllProjectsScreen() {
   const router = useRouter();
   const { t } = useTranslation();
+  const { currentLanguage } = useI18n();
   const { width } = useWindowDimensions();
   const isWide = width > 768;
   const projects = useLocalizedProjects();
 
+  const isEn = currentLanguage === 'en';
+  const copy = isEn ? COPY.en : COPY.pt;
+
+  // ItemList ajuda o Google a entender a página como uma coleção de projetos.
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'CollectionPage',
+    name: copy.title,
+    description: copy.desc,
+    url: absoluteUrl('/projects'),
+    mainEntity: {
+      '@type': 'ItemList',
+      numberOfItems: projects.length,
+      itemListElement: projects.map((p, i) => ({
+        '@type': 'ListItem',
+        position: i + 1,
+        name: p.name,
+        description: p.shortDescription,
+        url: absoluteUrl(`/project/${p.id}`),
+      })),
+    },
+  };
+
   return (
     <>
-      <Head>
-        <title>{PAGE_TITLE}</title>
-        <meta name="description" content={PAGE_DESC} />
-        <meta property="og:title" content={PAGE_TITLE} />
-        <meta property="og:description" content={PAGE_DESC} />
-        <meta property="og:url" content={`https://jonathanfsilva.dev/projects`} />
-      </Head>
+      <SeoHead
+        title={copy.title}
+        description={copy.desc}
+        path="/projects"
+        locale={isEn ? 'en_US' : 'pt_BR'}
+        jsonLd={jsonLd}
+      />
       <View style={styles.screen}>
         <ScrollView
           style={styles.scroll}

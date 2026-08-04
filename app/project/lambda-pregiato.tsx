@@ -15,6 +15,8 @@ import {
 } from 'react-native';
 import { Text } from '@/components/ui/AppText';
 import { SvgXml } from 'react-native-svg';
+import { SeoHead } from '@/components/seo/SeoHead';
+import { absoluteUrl } from '@/constants/seo';
 
 // ── Constants ──────────────────────────────────────────────────────────────────
 
@@ -542,11 +544,26 @@ export default function LambdaPregiatoPage() {
   }, []);
 
   return (
-    <ScrollView style={styles.scroll} contentContainerStyle={styles.scrollContent}>
-      <HeroSection onBack={() => router.back()} />
-      <FlowSection />
-      <ArchitectureSection isWide={isWide} />
-    </ScrollView>
+    <>
+      <SeoHead
+        title="Lambda.Pregiato"
+        description="Integrador assíncrono de contratos digitais em C#/.NET 8 — consome filas RabbitMQ, busca contratos em PostgreSQL, converte PDFs e aciona a API Autentique para assinatura eletrônica via WhatsApp."
+        path="/project/lambda-pregiato"
+        jsonLd={{
+          '@context': 'https://schema.org',
+          '@type': 'SoftwareSourceCode',
+          name: 'Lambda.Pregiato',
+          url: absoluteUrl('/project/lambda-pregiato'),
+          programmingLanguage: ['C#', '.NET 8', 'RabbitMQ', 'PostgreSQL', 'EF Core', 'Docker'],
+          author: { '@type': 'Person', name: 'Jonathan F. Silva' },
+        }}
+      />
+      <ScrollView style={styles.scroll} contentContainerStyle={styles.scrollContent}>
+        <HeroSection onBack={() => router.back()} />
+        <FlowSection />
+        <ArchitectureSection isWide={isWide} />
+      </ScrollView>
+    </>
   );
 }
 
