@@ -22,9 +22,28 @@ export type Project = {
   num?: string;
   /** URL do repositório no GitHub (botão do cartão). */
   github?: string;
+  /** Aparece na vitrine de 3 da home. Os não-destacados só existem em /projects. */
+  featured?: boolean;
 };
 
 export const projects: Project[] = [
+  {
+    id: 'hyperledger-transactions',
+    name: 'HyperLedger.Transactions',
+    shortDescription:
+      'Motor de processamento de transações financeiras em .NET 10 — hexagonal, Outbox sobre MongoDB, Kafka e Stripe.',
+    description:
+      'Núcleo transacional financeiro: recebe a ordem de pagamento, cobra pelo Stripe, atualiza o saldo e grava o lançamento no livro-razão imutável. Arquitetura hexagonal em .NET 10, idempotência durável, Outbox Pattern sobre transação multi-documento do MongoDB e consumers paralelos por partição no Kafka.',
+    imageUrl: 'https://images.unsplash.com/photo-1639762681485-074b7f938ba0?w=600&h=400&fit=crop&fm=webp&q=80',
+    videoUrl: '',
+    stack: ['C# 14', '.NET 10', 'MongoDB 8', 'Kafka 3.9', 'Redis 7.4', 'Stripe', 'Docker'],
+    shortKey: 'proj_hyperledger_short',
+    descKey: 'proj_hyperledger_desc',
+    accent: '#38bdf8',
+    num: '01',
+    github: 'https://github.com/MySystemProjetcs/HyperLedger-II',
+    featured: true,
+  },
   {
     id: 'conversor-moedas',
     name: 'Conversor de Moedas',
@@ -40,7 +59,7 @@ export const projects: Project[] = [
     shortKey: 'proj_conversor_short',
     descKey: 'proj_conversor_desc',
     accent: '#34d399',
-    num: '01',
+    num: '02',
   },
   {
     id: 'lambda-pregiato',
@@ -54,7 +73,8 @@ export const projects: Project[] = [
     shortKey: 'proj_lambda_short',
     descKey: 'proj_lambda_desc',
     accent: '#38bdf8',
-    num: '02',
+    num: '03',
+    featured: true,
   },
   {
     id: 'mypregiato',
@@ -68,8 +88,9 @@ export const projects: Project[] = [
     shortKey: 'proj_mypregiato_short',
     descKey: 'proj_mypregiato_desc',
     accent: '#38bdf8',
-    num: '03',
+    num: '04',
     github: 'https://github.com/jntcloudcod2019/mypregiato',
+    featured: true,
   },
 ];
 

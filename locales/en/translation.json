@@ -55,6 +55,8 @@
   "lp_arch_data_i3_sub": "Async/await · env vars config",
   "projects_more": "More Projects",
   "projects_all_title": "All Projects",
+  "proj_hyperledger_short": "High-performance financial transaction engine in .NET 10 — hexagonal, Outbox over MongoDB, Kafka and Stripe.",
+  "proj_hyperledger_desc": "Financial transaction core: takes the payment order, charges through Stripe, updates the account balance and writes the entry to the immutable ledger. Hexagonal architecture on .NET 10, durable idempotency, Outbox Pattern over MongoDB multi-document transactions and per-partition parallel consumers on Kafka.",
   "proj_conversor_name": "Currency Converter",
   "proj_conversor_short": "Real-time converter powered by the Free Currency API.",
   "proj_conversor_desc": "Currency converter that consumes the Free Currency API to fetch exchange rates updated in real time.",

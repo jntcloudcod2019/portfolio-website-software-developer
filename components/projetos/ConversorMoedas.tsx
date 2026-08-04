@@ -12,6 +12,7 @@ import {
 } from 'react-native';
 import { Text } from '@/components/ui/AppText';
 import { SvgXml } from 'react-native-svg';
+import { useI18n } from '@/context/I18nProvider';
 
 import US from 'country-flag-icons/string/3x2/US';
 import EU from 'country-flag-icons/string/3x2/EU';
@@ -76,16 +77,16 @@ type Currency = 'USD' | 'EUR' | 'GBP' | 'JPY' | 'BRL';
 interface CurrencyConfig {
   code: Currency;
   flag: string;
-  name: string;
+  /** JPY não usa centavos — a precisão é por moeda, não global. */
   decimals: number;
 }
 
 const CURRENCIES: CurrencyConfig[] = [
-  { code: 'USD', flag: US, name: 'Dólar Americano', decimals: 2 },
-  { code: 'EUR', flag: EU, name: 'Euro', decimals: 2 },
-  { code: 'GBP', flag: GB, name: 'Libra Esterlina', decimals: 2 },
-  { code: 'JPY', flag: JP, name: 'Iene Japonês', decimals: 0 },
-  { code: 'BRL', flag: BR, name: 'Real Brasileiro', decimals: 2 },
+  { code: 'USD', flag: US, decimals: 2 },
+  { code: 'EUR', flag: EU, decimals: 2 },
+  { code: 'GBP', flag: GB, decimals: 2 },
+  { code: 'JPY', flag: JP, decimals: 0 },
+  { code: 'BRL', flag: BR, decimals: 2 },
 ];
 
 const CURRENCY_MAP: Record<string, CurrencyConfig> = Object.fromEntries(
@@ -93,6 +94,117 @@ const CURRENCY_MAP: Record<string, CurrencyConfig> = Object.fromEntries(
 );
 
 type RateMap = Record<string, number>;
+
+// ── Textos ───────────────────────────────────────────────────────────────────
+
+const COPY = {
+  pt: {
+    eyebrow: '// ferramenta · câmbio de moedas',
+    titleA: 'Conversor de ',
+    titleB: 'Moedas',
+    subtitle: 'USD · EUR · GBP · JPY · BRL · cotações em tempo real',
+    from: 'De',
+    to: 'Para',
+    error: 'Cotações indisponíveis. Verifique sua conexão.',
+    retry: 'Tentar novamente',
+    source: 'Fonte · freecurrencyapi.com',
+    disclaimer: 'Dados para referência · não financeiro',
+    ago: (n: number, u: 's' | 'min' | 'h') => `${n}${u} atrás`,
+    names: {
+      USD: 'Dólar Americano', EUR: 'Euro', GBP: 'Libra Esterlina',
+      JPY: 'Iene Japonês',    BRL: 'Real Brasileiro',
+    } as Record<Currency, string>,
+
+    techLabel: '// detalhes técnicos',
+    techTitle: 'Como funciona',
+    techP1:
+      'O conversor busca as paridades reais na Free Currency API assim que a tela monta e mantém tudo em memória — não há back-end próprio nem cache intermediário. Uma única requisição alimenta as cinco moedas.',
+    techP2:
+      'A API entrega todas as taxas relativas ao dólar. Converter BRL para EUR, portanto, não é uma consulta direta: a paridade é triangulada no cliente a partir das duas cotações contra USD.',
+    reqLabel: 'Requisição',
+    cards: [
+      {
+        n: '01',
+        title: 'Integração REST',
+        text: 'Uma chamada a GET /v1/latest com base_currency=USD retorna EUR, GBP, JPY e BRL. O USD é injetado como 1 no mapa de taxas para fechar a matriz e permitir qualquer par.',
+      },
+      {
+        n: '02',
+        title: 'Cotação cruzada',
+        text: 'Como tudo chega ancorado no dólar, o par escolhido é derivado por divisão: taxa = destino ÷ origem. Pares sem USD saem de duas paridades, sem requisição extra.',
+      },
+      {
+        n: '03',
+        title: 'Precisão por moeda',
+        text: 'Cada moeda declara suas casas decimais — o iene não tem centavos e é formatado com zero. A entrada aceita o formato pt-BR (1.000,50) e é normalizada antes do cálculo.',
+      },
+      {
+        n: '04',
+        title: 'Estados de rede',
+        text: 'Carregando, sucesso e falha têm indicador próprio: ponto âmbar pulsante, verde e vermelho com botão de nova tentativa. Um contador relativo mostra a idade das cotações.',
+      },
+    ],
+  },
+  en: {
+    eyebrow: '// tool · currency exchange',
+    titleA: 'Currency ',
+    titleB: 'Converter',
+    subtitle: 'USD · EUR · GBP · JPY · BRL · real-time rates',
+    from: 'From',
+    to: 'To',
+    error: 'Rates unavailable. Check your connection.',
+    retry: 'Try again',
+    source: 'Source · freecurrencyapi.com',
+    disclaimer: 'Reference data · not financial advice',
+    ago: (n: number, u: 's' | 'min' | 'h') => `${n}${u} ago`,
+    names: {
+      USD: 'US Dollar',      EUR: 'Euro',           GBP: 'British Pound',
+      JPY: 'Japanese Yen',   BRL: 'Brazilian Real',
+    } as Record<Currency, string>,
+
+    techLabel: '// technical details',
+    techTitle: 'How it works',
+    techP1:
+      'The converter fetches live parities from the Free Currency API as soon as the screen mounts and keeps them in memory — there is no back-end of its own and no intermediate cache. A single request feeds all five currencies.',
+    techP2:
+      'The API returns every rate relative to the US dollar. Converting BRL to EUR is therefore not a direct lookup: the parity is triangulated on the client from the two USD quotes.',
+    reqLabel: 'Request',
+    cards: [
+      {
+        n: '01',
+        title: 'REST integration',
+        text: 'One call to GET /v1/latest with base_currency=USD returns EUR, GBP, JPY and BRL. USD is injected as 1 into the rate map to close the matrix and allow any pair.',
+      },
+      {
+        n: '02',
+        title: 'Cross rates',
+        text: 'Since everything arrives anchored to the dollar, the selected pair is derived by division: rate = target ÷ source. Pairs without USD come from two parities, with no extra request.',
+      },
+      {
+        n: '03',
+        title: 'Per-currency precision',
+        text: 'Each currency declares its own decimal places — the yen has no cents and is formatted with zero. Input accepts the pt-BR format (1.000,50) and is normalized before the calculation.',
+      },
+      {
+        n: '04',
+        title: 'Network states',
+        text: 'Loading, success and failure each have their own indicator: pulsing amber dot, green, and red with a retry button. A relative counter shows how old the rates are.',
+      },
+    ],
+  },
+} as const;
+
+/** Requisição real, com a chave omitida. */
+const REQ_LINES = [
+  'GET api.freecurrencyapi.com/v1/latest',
+  '    ?base_currency=USD',
+  '    &currencies=EUR,GBP,JPY,BRL',
+];
+
+const STACK = [
+  'React Native', 'TypeScript', 'Expo',
+  'Free Currency API', 'react-native-svg', 'country-flag-icons',
+];
 
 function parseInput(text: string): number {
   if (text.includes(',')) {
@@ -110,16 +222,19 @@ function formatNum(value: number, currency: Currency): string {
   });
 }
 
-function timeAgo(date: Date): string {
+function timeAgo(date: Date, ago: (n: number, u: 's' | 'min' | 'h') => string): string {
   const s = Math.floor((Date.now() - date.getTime()) / 1000);
-  if (s < 60) return `${s}s atrás`;
+  if (s < 60) return ago(s, 's');
   const m = Math.floor(s / 60);
-  return m < 60 ? `${m}min atrás` : `${Math.floor(m / 60)}h atrás`;
+  return m < 60 ? ago(m, 'min') : ago(Math.floor(m / 60), 'h');
 }
 
 // ── Component ────────────────────────────────────────────────────────────────
 
 export function ConversorMoedas() {
+  const { currentLanguage } = useI18n();
+  const L = currentLanguage === 'en' ? COPY.en : COPY.pt;
+
   const [from, setFrom] = useState<Currency>('BRL');
   const [to, setTo] = useState<Currency>('USD');
   const [fromInput, setFromInput] = useState('1000');
@@ -142,11 +257,11 @@ export function ConversorMoedas() {
       setRates({ USD: 1, ...json.data });
       setRatesLoadedAt(new Date());
     } catch {
-      setError('Cotações indisponíveis. Verifique sua conexão.');
+      setError(L.error);
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [L.error]);
 
   useEffect(() => {
     fetchRates();
@@ -213,7 +328,7 @@ export function ConversorMoedas() {
           <SvgXml xml={cur.flag} width={FLAG_W} height={FLAG_H} />
           <Text style={[styles.selectCode, { fontFamily: MONO }]}>{cur.code}</Text>
           <Text style={[styles.selectName, { fontFamily: GROTESK }]} numberOfLines={1}>
-            {cur.name}
+            {L.names[cur.code]}
           </Text>
           <Text style={[styles.chevron, isOpen && styles.chevronOpen]}>▾</Text>
         </Pressable>
@@ -240,7 +355,7 @@ export function ConversorMoedas() {
                       {c.code}
                     </Text>
                     <Text style={[styles.dropName, { fontFamily: GROTESK }]} numberOfLines={1}>
-                      {c.name}
+                      {L.names[c.code]}
                     </Text>
                   </Pressable>
                 );
@@ -256,15 +371,12 @@ export function ConversorMoedas() {
     <View style={styles.page}>
       <View style={styles.inner}>
         <View style={styles.hero}>
-          <Text style={[styles.eyebrow, { fontFamily: MONO }]}>
-            // ferramenta · câmbio de moedas
-          </Text>
+          <Text style={[styles.eyebrow, { fontFamily: MONO }]}>{L.eyebrow}</Text>
           <Text style={[styles.title, { fontFamily: GROTESK }]}>
-            Conversor de <Text style={{ color: C.cyan }}>Moedas</Text>
+            {L.titleA}<Text style={{ color: C.cyan }}>{L.titleB}</Text>
           </Text>
           <Text style={[styles.subtitle, { fontFamily: MONO }]}>
-            USD · EUR · GBP · JPY · BRL · cotações em tempo real
-          </Text>
+            {L.subtitle}</Text>
         </View>
 
         <View style={styles.card}>
@@ -280,14 +392,14 @@ export function ConversorMoedas() {
           <View style={styles.errorBanner}>
             <Text style={[styles.errorText, { fontFamily: MONO }]}>{error}</Text>
             <Pressable style={styles.retryBtn} onPress={fetchRates}>
-              <Text style={[styles.retryText, { fontFamily: MONO }]}>Tentar novamente</Text>
+              <Text style={[styles.retryText, { fontFamily: MONO }]}>{L.retry}</Text>
             </Pressable>
           </View>
         )}
 
         {/* DE */}
         <View style={styles.fieldTop}>
-          <Text style={[styles.label, { fontFamily: MONO }]}>De</Text>
+          <Text style={[styles.label, { fontFamily: MONO }]}>{L.from}</Text>
           {renderPicker('from', 30)}
           <TextInput
             style={[styles.amountInput, { fontFamily: GROTESK }, webNoOutline]}
@@ -319,7 +431,7 @@ export function ConversorMoedas() {
 
         {/* PARA */}
         <View style={styles.fieldBottom}>
-          <Text style={[styles.label, { fontFamily: MONO }]}>Para</Text>
+          <Text style={[styles.label, { fontFamily: MONO }]}>{L.to}</Text>
           {renderPicker('to', 20)}
           <View style={styles.resultBox}>
             <Text style={[styles.resultText, { fontFamily: GROTESK }]}>{result}</Text>
@@ -342,7 +454,7 @@ export function ConversorMoedas() {
               ]}
             />
             <Text style={[styles.updated, { fontFamily: MONO }]}>
-              {ratesLoadedAt ? timeAgo(ratesLoadedAt) : '—'}
+              {ratesLoadedAt ? timeAgo(ratesLoadedAt, L.ago) : '—'}
             </Text>
             <Pressable style={styles.refreshBtn} onPress={fetchRates}>
               <SvgXml xml={REFRESH_SVG} width={11} height={11} />
@@ -353,10 +465,43 @@ export function ConversorMoedas() {
 
       {/* Footer */}
       <View style={styles.footer}>
-        <Text style={[styles.footerText, { fontFamily: MONO }]}>Fonte · freecurrencyapi.com</Text>
-        <Text style={[styles.footerText, { fontFamily: MONO }]}>
-          Dados para referência · não financeiro
-        </Text>
+        <Text style={[styles.footerText, { fontFamily: MONO }]}>{L.source}</Text>
+        <Text style={[styles.footerText, { fontFamily: MONO }]}>{L.disclaimer}</Text>
+      </View>
+
+      {/* ── Detalhes técnicos ── */}
+      <View style={styles.tech}>
+        <Text style={[styles.techLabel, { fontFamily: MONO }]}>{L.techLabel}</Text>
+        <Text style={[styles.techTitle, { fontFamily: GROTESK }]}>{L.techTitle}</Text>
+
+        <Text style={[styles.techPara, { fontFamily: GROTESK }]}>{L.techP1}</Text>
+        <Text style={[styles.techPara, { fontFamily: GROTESK }]}>{L.techP2}</Text>
+
+        {/* Requisição real — a chave da API é omitida de propósito */}
+        <View style={styles.reqBox}>
+          <Text style={[styles.reqLabel, { fontFamily: MONO }]}>{L.reqLabel}</Text>
+          {REQ_LINES.map((line) => (
+            <Text key={line} style={[styles.reqLine, { fontFamily: MONO }]}>{line}</Text>
+          ))}
+        </View>
+
+        <View style={styles.techGrid}>
+          {L.cards.map((c) => (
+            <View key={c.n} style={styles.techCard}>
+              <Text style={[styles.techCardNum, { fontFamily: MONO }]}>{c.n}</Text>
+              <Text style={[styles.techCardTitle, { fontFamily: GROTESK }]}>{c.title}</Text>
+              <Text style={[styles.techCardText, { fontFamily: GROTESK }]}>{c.text}</Text>
+            </View>
+          ))}
+        </View>
+
+        <View style={styles.stackRow}>
+          {STACK.map((tech) => (
+            <View key={tech} style={styles.stackChip}>
+              <Text style={[styles.stackText, { fontFamily: MONO }]}>{tech}</Text>
+            </View>
+          ))}
+        </View>
       </View>
       </View>
     </View>
@@ -590,4 +735,81 @@ const styles = StyleSheet.create({
     borderTopColor: C.border,
   },
   footerText: { fontSize: 10, color: C.textUltra, letterSpacing: 0.3 },
+
+  // Detalhes técnicos
+  tech: {
+    marginTop: 56,
+    paddingTop: 40,
+    borderTopWidth: 1,
+    borderTopColor: C.border,
+  },
+  techLabel: {
+    fontSize: 11,
+    letterSpacing: 3,
+    color: C.cyan,
+    textTransform: 'uppercase',
+    marginBottom: 12,
+  },
+  techTitle: {
+    fontSize: 26,
+    fontWeight: '700',
+    color: C.text,
+    letterSpacing: -0.6,
+    marginBottom: 18,
+  },
+  techPara: {
+    fontSize: 14.5,
+    lineHeight: 24,
+    color: C.textSec,
+    marginBottom: 14,
+  },
+
+  // Requisição
+  reqBox: {
+    backgroundColor: '#0c0e13',
+    borderWidth: 1,
+    borderColor: C.border,
+    borderRadius: 10,
+    padding: 14,
+    marginTop: 8,
+    marginBottom: 24,
+  },
+  reqLabel: {
+    fontSize: 9.5,
+    letterSpacing: 2,
+    color: C.textDim,
+    textTransform: 'uppercase',
+    marginBottom: 10,
+  },
+  reqLine: { fontSize: 11.5, lineHeight: 19, color: '#9ca3af' },
+
+  // Cards
+  techGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: 12 },
+  techCard: {
+    flexGrow: 1,
+    flexBasis: 240,
+    minWidth: 220,
+    backgroundColor: C.card,
+    borderWidth: 1,
+    borderColor: C.border,
+    borderTopWidth: 2,
+    borderTopColor: '#38bdf866',
+    borderRadius: 14,
+    padding: 18,
+  },
+  techCardNum: { fontSize: 10, fontWeight: '700', color: C.cyan, marginBottom: 8 },
+  techCardTitle: { fontSize: 14.5, fontWeight: '600', color: C.text, marginBottom: 6 },
+  techCardText: { fontSize: 12.5, lineHeight: 20, color: C.textSec },
+
+  // Stack
+  stackRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 6, marginTop: 20 },
+  stackChip: {
+    backgroundColor: C.rateBg,
+    borderWidth: 1,
+    borderColor: '#23272f',
+    borderRadius: 6,
+    paddingVertical: 4,
+    paddingHorizontal: 9,
+  },
+  stackText: { fontSize: 11, color: '#9ca3af' },
 });

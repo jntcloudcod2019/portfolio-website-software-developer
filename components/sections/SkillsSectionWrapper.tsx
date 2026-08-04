@@ -55,9 +55,6 @@ const DOMAINS: Domain[] = [
   { name: 'Back-end', color: '#a78bfa', items: [
     { label: 'C#',               url: `${DEVICON}csharp/csharp-original.svg`, brand: '#9B4F96' },
     { label: '.NET Core 6-10',   slug: 'dotnet',      brand: '#512BD4' },
-    { label: 'Entity Framework', mono: 'EF' },
-    { label: 'Dapper',           mono: 'DP' },
-    { label: 'LINQ',             mono: 'LQ' },
     { label: 'Node.js',          slug: 'nodedotjs',   brand: '#5FA04E' },
     { label: 'TypeScript',       slug: 'typescript',  brand: '#3178C6' },
     { label: 'COBOL',            mono: 'CB' },

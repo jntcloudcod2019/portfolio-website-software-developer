@@ -49,8 +49,15 @@ export default function RootLayout() {
             onNavigate={() => router.push('/')}
           />
         )}
+        {/* `headerShown` e `headerLeft` ficam no default e NÃO por rota: no web quem
+            desenha o cabeçalho é o NavHeader acima. Uma rota não declarada aqui
+            herdava o default do Stack (headerShown: true) e renderizava a barra
+            nativa de 64px com borda clara logo abaixo do NavHeader. Com o default
+            correto, qualquer página nova já nasce sem esse artefato. */}
         <Stack
           screenOptions={{
+            headerShown: Platform.OS !== 'web',
+            headerLeft: () => <BackButton />,
             headerStyle: { backgroundColor: colors.background },
             headerTintColor: colors.text,
             headerTitleStyle: { fontWeight: '600' },
@@ -58,30 +65,9 @@ export default function RootLayout() {
           }}
         >
           <Stack.Screen name="index" options={{ headerShown: false }} />
-          <Stack.Screen
-            name="projects"
-            options={{
-              title: 'Projetos',
-              headerShown: Platform.OS !== 'web',
-              headerLeft: () => <BackButton />,
-            }}
-          />
-          <Stack.Screen
-            name="project/[id]"
-            options={{
-              title: 'Projeto',
-              headerShown: Platform.OS !== 'web',
-              headerLeft: () => <BackButton />,
-            }}
-          />
-          <Stack.Screen
-            name="estudo/inteligencia-agentica"
-            options={{
-              title: 'Estudo',
-              headerShown: Platform.OS !== 'web',
-              headerLeft: () => <BackButton />,
-            }}
-          />
+          <Stack.Screen name="projects" options={{ title: 'Projetos' }} />
+          <Stack.Screen name="project/[id]" options={{ title: 'Projeto' }} />
+          <Stack.Screen name="estudo/inteligencia-agentica" options={{ title: 'Estudo' }} />
         </Stack>
       </LikesProvider>
       </I18nProvider>

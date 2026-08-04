@@ -28,10 +28,13 @@ export function ProjectsSection({ sectionRef }: { sectionRef?: React.Ref<View> }
   return (
     <Section ref={sectionRef} style={styles.sectionOverride as object}>
       <SectionSeparator label={t('section_projects')} />
+      {/* Vitrine: só os destacados. Os demais ficam em /projects. */}
       <View style={styles.grid}>
-        {projects.map((project) => (
-          <ProjectCard key={project.id} project={project} />
-        ))}
+        {projects
+          .filter((project) => project.featured)
+          .map((project) => (
+            <ProjectCard key={project.id} project={project} />
+          ))}
       </View>
       <View style={styles.moreContainer}>
         <Pressable
