@@ -8,6 +8,9 @@ export const SITE_URL = 'https://jonathan-enginner-software.vercel.app';
 
 export const SITE_NAME = 'Jonathan F. Silva | Software Engineer';
 
+/** Sufixo curto para títulos de subpáginas — SITE_NAME inteiro deixaria o title longo demais. */
+export const TITLE_SUFFIX = 'Jonathan F. Silva';
+
 export const SITE_DESC =
   'Portfólio de Jonathan F. Silva — Engenheiro de Software Full Stack com 5 anos em sistemas financeiros: APIs de pagamento, precificação de ativos e risco de mercado em C#/.NET, Node.js e AWS.';
 

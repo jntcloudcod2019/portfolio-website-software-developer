@@ -113,6 +113,16 @@ export default function Root({ children }: PropsWithChildren) {
         <link rel="preconnect" href="https://images.unsplash.com" />
         <link rel="dns-prefetch" href="https://images.unsplash.com" />
 
+        {/* ── Fontes ──────────────────────────────────────────────────────
+            Declaradas aqui (e não só via @import no global.css): o @import é
+            a forma mais lenta de carregar fonte — o browser precisa baixar e
+            analisar o CSS antes de descobrir a dependência. Com <link> logo
+            após o preconnect, o download começa imediatamente. */}
+        <link
+          rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Syne:wght@800&family=Space+Grotesk:wght@300;400;500;600;700&display=swap"
+        />
+
         {/* ── Preload Hero Image (LCP) ───────────────────────────────── */}
         <link
           rel="preload"

@@ -4,6 +4,7 @@ import { Linking, Platform, Pressable, StyleSheet, View } from 'react-native';
 import { Text } from '@/components/ui/AppText';
 
 import { Section } from '@/components/layout/Section';
+import { SectionSeparator } from '@/components/ui/SectionSeparator';
 import { useTranslation } from 'react-i18next';
 import { useLocalizedStudies, type LocalizedStudy } from '@/hooks/useLocalizedContent';
 
@@ -20,23 +21,6 @@ const SPACE = Platform.select({
   web: '"Space Grotesk", sans-serif',
   default: 'sans-serif',
 });
-
-// ─── Section Header ───────────────────────────────────────────────────────────
-
-function SectionHeader() {
-  const { t } = useTranslation();
-  const ruleWeb: object =
-    Platform.OS === 'web'
-      ? { background: 'linear-gradient(to right, #23262d, transparent)' }
-      : {};
-
-  return (
-    <View style={styles.headerRow}>
-      <Text style={[styles.headerLabel, { fontFamily: MONO }]}>{t('section_studies')}</Text>
-      <View style={[styles.headerRule, ruleWeb]} />
-    </View>
-  );
-}
 
 // ─── Study Card ───────────────────────────────────────────────────────────────
 
@@ -78,9 +62,10 @@ function StudyCard({ item }: { item: LocalizedStudy }) {
 
 export function StudiesSection({ sectionRef }: { sectionRef?: React.Ref<View> }) {
   const studies = useLocalizedStudies();
+  const { t } = useTranslation();
   return (
     <Section ref={sectionRef} style={styles.sectionOverride as object}>
-      <SectionHeader />
+      <SectionSeparator label={t('section_studies')} />
       <View style={styles.grid}>
         {studies.map((item) => (
           <StudyCard key={item.id} item={item} />
@@ -95,25 +80,6 @@ export function StudiesSection({ sectionRef }: { sectionRef?: React.Ref<View> })
 const styles = StyleSheet.create({
   sectionOverride: {
     justifyContent: 'flex-start',
-  },
-
-  /* Header */
-  headerRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 16,
-    marginBottom: 32,
-  },
-  headerLabel: {
-    fontSize: 13,
-    color: '#9ca3af',
-    letterSpacing: 5,
-    textTransform: 'uppercase',
-  },
-  headerRule: {
-    flex: 1,
-    height: 1,
-    backgroundColor: '#23262d',
   },
 
   grid: {

@@ -1,9 +1,8 @@
 {
   "buildCommand": "npx expo export --platform web && node scripts/postbuild.js",
   "outputDirectory": "dist",
-  "rewrites": [
-    { "source": "/(.*)", "destination": "/index.html" }
-  ],
+  "trailingSlash": false,
+  "cleanUrls": true,
   "headers": [
     {
       "source": "/_expo/static/(.*)",

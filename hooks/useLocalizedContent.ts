@@ -15,6 +15,7 @@ export type LocalizedStudy = StudyItem & { typeLabel: string };
 function localizeProject(p: Project, t: TFunction): LocalizedProject {
   return {
     ...p,
+    name: p.nameKey ? t(p.nameKey, { defaultValue: p.name }) : p.name,
     shortDescription: p.shortKey
       ? t(p.shortKey, { defaultValue: p.shortDescription })
       : p.shortDescription,

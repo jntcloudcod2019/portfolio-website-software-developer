@@ -1,8 +1,10 @@
 import Head from 'expo-router/head';
 import React from 'react';
+import { Platform } from 'react-native';
 
 import {
   SITE_NAME,
+  TITLE_SUFFIX,
   OG_IMAGE,
   OG_IMAGE_W,
   OG_IMAGE_H,
@@ -47,9 +49,10 @@ export function SeoHead({
   jsonLd,
 }: SeoHeadProps) {
   const url = absoluteUrl(path);
-  const fullTitle = title.includes(SITE_NAME) ? title : `${title} | ${SITE_NAME}`;
+  const fullTitle = title === SITE_NAME ? title : `${title} | ${TITLE_SUFFIX}`;
 
   return (
+    <>
     <Head>
       <title>{fullTitle}</title>
       <meta name="description" content={description} />
@@ -74,12 +77,17 @@ export function SeoHead({
       <meta name="twitter:image" content={OG_IMAGE} />
       <meta name="twitter:image:alt" content={OG_IMAGE_ALT} />
 
-      {jsonLd ? (
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-        />
-      ) : null}
     </Head>
+
+    {/* O JSON-LD fica FORA do <Head>: o expo-router/head só propaga title/meta/link
+        e descarta <script>, então dentro dele o bloco nunca chegava ao HTML.
+        Structured data em <body> é válido e reconhecido pelos crawlers. */}
+    {jsonLd && Platform.OS === 'web' ? (
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+    ) : null}
+    </>
   );
 }

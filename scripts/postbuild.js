@@ -3,7 +3,6 @@ const fs   = require('fs');
 const path = require('path');
 
 const distDir   = path.join(__dirname, '../dist');
-const htmlPath  = path.join(distDir, 'index.html');
 const sitemapPath = path.join(distDir, 'sitemap.xml');
 const robotsPath  = path.join(distDir, 'robots.txt');
 
@@ -33,14 +32,25 @@ const svg = [
 const faviconUri = 'data:image/svg+xml,' + encodeURIComponent(svg);
 const faviconTag = `<link rel="icon" type="image/svg+xml" href="${faviconUri}" />`;
 
-let html = fs.readFileSync(htmlPath, 'utf-8');
-html = html.replace(/<link rel="icon"[^>]*\/?>/g, faviconTag);
-html = html.replace(
-  /<title>[^<]*<\/title>/,
-  '<title>Jonathan | Software Engineer</title>'
-);
-fs.writeFileSync(htmlPath, html, 'utf-8');
-console.log('✓ postbuild: favicon </> e título atualizados');
+// Com `web.output: 'static'` o build gera um HTML por rota — o favicon precisa ser
+// corrigido em todos, não só no index. O <title> NÃO é mais sobrescrito aqui: cada
+// rota declara o seu via <SeoHead>, e o override antigo apagava esse título.
+function walkHtml(dir, out = []) {
+  for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+    const p = path.join(dir, entry.name);
+    if (entry.isDirectory()) walkHtml(p, out);
+    else if (entry.name.endsWith('.html')) out.push(p);
+  }
+  return out;
+}
+
+const htmlFiles = walkHtml(distDir);
+for (const file of htmlFiles) {
+  const src = fs.readFileSync(file, 'utf-8');
+  const next = src.replace(/<link rel="icon"[^>]*\/?>/g, faviconTag);
+  if (next !== src) fs.writeFileSync(file, next, 'utf-8');
+}
+console.log(`✓ postbuild: favicon </> aplicado em ${htmlFiles.length} arquivo(s) HTML`);
 
 // ─── Sitemap ──────────────────────────────────────────────────────────────────
 const projectsPath = path.join(__dirname, '../content/projects.ts');

@@ -12,6 +12,7 @@ import { Platform,
 import { Text } from '@/components/ui/AppText';
 
 import { Section } from '@/components/layout/Section';
+import { SectionSeparator } from '@/components/ui/SectionSeparator';
 import { useTranslation } from 'react-i18next';
 import { portfolio } from '@/content/portfolio';
 
@@ -177,6 +178,11 @@ export function ContactSection({ sectionRef }: { sectionRef?: React.Ref<View> })
 
   return (
     <Section ref={sectionRef}>
+      {/* Título da seção FORA do card — mesmo padrão de Projetos/Estudos/Habilidades.
+          Fica fora do `sectionInner` porque aquele wrapper tem alignItems:'center',
+          o que encolheria o separador ao tamanho do texto e cortaria as linhas. */}
+      <SectionSeparator label={t('contact_label')} />
+
       {/* Inner wrapper: card centered, footer pinned to bottom */}
       <View style={styles.sectionInner}>
 
@@ -194,9 +200,6 @@ export function ContactSection({ sectionRef }: { sectionRef?: React.Ref<View> })
               ]}
             />
           )}
-
-          {/* Label */}
-          <Text style={[styles.label, { fontFamily: MONO }]}>{t('contact_label')}</Text>
 
           {/* Title */}
           <Text style={[styles.title, titleWeb as object]}>
@@ -286,13 +289,6 @@ const styles = StyleSheet.create({
   },
 
   /* Label */
-  label: {
-    fontSize: 12,
-    letterSpacing: 4.8,
-    color: ACCENT,
-    textTransform: 'uppercase',
-    marginBottom: 2,
-  },
 
   /* Title */
   title: {

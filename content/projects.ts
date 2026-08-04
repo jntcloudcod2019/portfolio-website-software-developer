@@ -10,7 +10,10 @@ export type Project = {
   /** Quando true, o componente interativo renderiza a página inteira (hero próprio),
    *  então o [id].tsx não desenha título/descrição/stack padrão. */
   fullBleed?: boolean;
-  /** Chaves i18n para tradução dinâmica; `shortDescription`/`description` servem de fallback PT. */
+  /** Chaves i18n para tradução dinâmica; `name`/`shortDescription`/`description` servem de fallback PT.
+   *  `nameKey` só existe onde o nome é traduzível — nomes próprios (Lambda.Pregiato,
+   *  MyPregiato) não têm chave e permanecem iguais nos dois idiomas. */
+  nameKey?: string;
   shortKey?: string;
   descKey?: string;
   /** Cor de destaque do cartão (hex). */
@@ -33,6 +36,7 @@ export const projects: Project[] = [
     stack: ['React Native', 'TypeScript', 'Expo', 'Free Currency API'],
     componentId: 'conversor-moedas',
     fullBleed: true,
+    nameKey: 'proj_conversor_name',
     shortKey: 'proj_conversor_short',
     descKey: 'proj_conversor_desc',
     accent: '#34d399',
