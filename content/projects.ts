@@ -45,6 +45,22 @@ export const projects: Project[] = [
     featured: true,
   },
   {
+    id: 'zap-blaster',
+    name: 'Zap Blaster',
+    shortDescription:
+      'Bot de WhatsApp que consome uma fila RabbitMQ e dispara mensagens via whatsapp-web.js.',
+    description:
+      'Bot de WhatsApp que consome mensagens de uma fila RabbitMQ e as envia automaticamente via whatsapp-web.js — WhatsApp Web automatizado com Puppeteer/Chromium headless, sessão persistida, templates dinâmicos e retry inteligente.',
+    imageUrl: 'https://images.unsplash.com/photo-1611746872915-64382b5c76da?w=600&h=400&fit=crop&fm=webp&q=80',
+    videoUrl: '',
+    stack: ['Node.js 18+', 'whatsapp-web.js', 'RabbitMQ', 'amqplib', 'Puppeteer', 'Docker'],
+    shortKey: 'proj_zapblaster_short',
+    descKey: 'proj_zapblaster_desc',
+    accent: '#25d366',
+    num: '02',
+    github: 'https://github.com/jntcloudcod2019/zap-blaster-projeto',
+  },
+  {
     id: 'conversor-moedas',
     name: 'Conversor de Moedas',
     shortDescription: 'Conversor em tempo real com a Free Currency API.',
@@ -59,7 +75,7 @@ export const projects: Project[] = [
     shortKey: 'proj_conversor_short',
     descKey: 'proj_conversor_desc',
     accent: '#34d399',
-    num: '02',
+    num: '03',
   },
   {
     id: 'lambda-pregiato',
@@ -73,7 +89,7 @@ export const projects: Project[] = [
     shortKey: 'proj_lambda_short',
     descKey: 'proj_lambda_desc',
     accent: '#38bdf8',
-    num: '03',
+    num: '04',
     featured: true,
   },
   {
@@ -88,7 +104,7 @@ export const projects: Project[] = [
     shortKey: 'proj_mypregiato_short',
     descKey: 'proj_mypregiato_desc',
     accent: '#38bdf8',
-    num: '04',
+    num: '05',
     github: 'https://github.com/jntcloudcod2019/mypregiato',
     featured: true,
   },

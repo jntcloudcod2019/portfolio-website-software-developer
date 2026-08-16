@@ -57,6 +57,8 @@
   "projects_all_title": "Todos os Projetos",
   "proj_hyperledger_short": "Motor de processamento de transações financeiras em .NET 10 — hexagonal, Outbox sobre MongoDB, Kafka e Stripe.",
   "proj_hyperledger_desc": "Núcleo transacional financeiro: recebe a ordem de pagamento, cobra pelo Stripe, atualiza o saldo e grava o lançamento no livro-razão imutável. Arquitetura hexagonal em .NET 10, idempotência durável, Outbox Pattern sobre transação multi-documento do MongoDB e consumers paralelos por partição no Kafka.",
+  "proj_zapblaster_short": "Bot de WhatsApp que consome uma fila RabbitMQ e dispara mensagens via whatsapp-web.js.",
+  "proj_zapblaster_desc": "Bot de WhatsApp que consome mensagens de uma fila RabbitMQ e as envia automaticamente via whatsapp-web.js — WhatsApp Web automatizado com Puppeteer/Chromium headless, sessão persistida, templates dinâmicos e retry inteligente.",
   "proj_conversor_name": "Conversor de Moedas",
   "proj_conversor_short": "Conversor em tempo real com a Free Currency API.",
   "proj_conversor_desc": "Conversor de moedas que consome a Free Currency API para obter taxas de câmbio atualizadas em tempo real.",

@@ -2,6 +2,7 @@
     "recommendations": [
         "openai.chatgpt",
         "anthropic.claude-code",
-        "ms-ceintl.vscode-language-pack-pt-br"
+        "ms-ceintl.vscode-language-pack-pt-br",
+        "moonshot-ai.kimi-code"
     ]
 }
