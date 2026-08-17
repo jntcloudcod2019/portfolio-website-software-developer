@@ -198,7 +198,11 @@ const PAGE_DESC =
 export default function HyperLedgerTransactionsPage() {
   const router = useRouter();
   const { width } = useWindowDimensions();
-  const isMobile = width < MOBILE_BP;
+  // `width > 0` importa: na renderização estática (web.output:'static') o
+  // useWindowDimensions ainda não mediu nada e devolve 0, o que cairia no ramo
+  // mobile e faria o desktop saltar de layout na hidratação. Com a guarda, o
+  // HTML pré-renderizado já sai no layout desktop.
+  const isMobile = width > 0 && width < MOBILE_BP;
 
   useEffect(() => {
     const el = document.createElement('style');

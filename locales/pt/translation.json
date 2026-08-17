@@ -59,6 +59,8 @@
   "proj_hyperledger_desc": "Núcleo transacional financeiro: recebe a ordem de pagamento, cobra pelo Stripe, atualiza o saldo e grava o lançamento no livro-razão imutável. Arquitetura hexagonal em .NET 10, idempotência durável, Outbox Pattern sobre transação multi-documento do MongoDB e consumers paralelos por partição no Kafka.",
   "proj_zapblaster_short": "Bot de WhatsApp que consome uma fila RabbitMQ e dispara mensagens via whatsapp-web.js.",
   "proj_zapblaster_desc": "Bot de WhatsApp que consome mensagens de uma fila RabbitMQ e as envia automaticamente via whatsapp-web.js — WhatsApp Web automatizado com Puppeteer/Chromium headless, sessão persistida, templates dinâmicos e retry inteligente.",
+  "proj_pregiatoapi_short": "API corporativa em ASP.NET Core 8 para agência de modelos — JWT, contratos em PDF e notificações via RabbitMQ.",
+  "proj_pregiatoapi_desc": "Cérebro operacional de uma agência de modelos digital. Centraliza cadastro de talentos, agendamento de jobs, geração de contratos em PDF, autenticação JWT e notificações via WhatsApp e e-mail — orquestrado com RabbitMQ sobre arquitetura limpa em camadas.",
   "proj_conversor_name": "Conversor de Moedas",
   "proj_conversor_short": "Conversor em tempo real com a Free Currency API.",
   "proj_conversor_desc": "Conversor de moedas que consome a Free Currency API para obter taxas de câmbio atualizadas em tempo real.",

@@ -61,6 +61,22 @@ export const projects: Project[] = [
     github: 'https://github.com/jntcloudcod2019/zap-blaster-projeto',
   },
   {
+    id: 'pregiato-api',
+    name: 'Pregiato API',
+    shortDescription:
+      'API corporativa em ASP.NET Core 8 para agência de modelos — JWT, contratos em PDF e notificações via RabbitMQ.',
+    description:
+      'Cérebro operacional de uma agência de modelos digital. Centraliza cadastro de talentos, agendamento de jobs, geração de contratos em PDF, autenticação JWT e notificações via WhatsApp e e-mail — orquestrado com RabbitMQ sobre arquitetura limpa em camadas.',
+    imageUrl: 'https://images.unsplash.com/photo-1555949963-aa79dcee981c?w=600&h=400&fit=crop&fm=webp&q=80',
+    videoUrl: '',
+    stack: ['ASP.NET Core 8', 'PostgreSQL', 'EF Core', 'RabbitMQ', 'PuppeteerSharp', 'Docker'],
+    shortKey: 'proj_pregiatoapi_short',
+    descKey: 'proj_pregiatoapi_desc',
+    accent: '#a78bfa',
+    num: '03',
+    github: 'https://github.com/jntcloudcod2019/Projeto_Pregiato_API',
+  },
+  {
     id: 'conversor-moedas',
     name: 'Conversor de Moedas',
     shortDescription: 'Conversor em tempo real com a Free Currency API.',
@@ -75,7 +91,7 @@ export const projects: Project[] = [
     shortKey: 'proj_conversor_short',
     descKey: 'proj_conversor_desc',
     accent: '#34d399',
-    num: '03',
+    num: '04',
   },
   {
     id: 'lambda-pregiato',
@@ -89,7 +105,7 @@ export const projects: Project[] = [
     shortKey: 'proj_lambda_short',
     descKey: 'proj_lambda_desc',
     accent: '#38bdf8',
-    num: '04',
+    num: '05',
     featured: true,
   },
   {
@@ -104,7 +120,7 @@ export const projects: Project[] = [
     shortKey: 'proj_mypregiato_short',
     descKey: 'proj_mypregiato_desc',
     accent: '#38bdf8',
-    num: '05',
+    num: '06',
     github: 'https://github.com/jntcloudcod2019/mypregiato',
     featured: true,
   },
