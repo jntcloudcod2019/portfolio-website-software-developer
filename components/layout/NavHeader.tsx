@@ -195,9 +195,11 @@ function LangTabs() {
 
 // ─── CvButton (download do currículo) ────────────────────────────────────────
 // Reutiliza o padrão do header (Pressable + Ionicons + estilos). Fica ao lado
-// do LangTabs. O PDF é servido de /public em /CV_Jonathan_Fernando_.pdf.
+// do LangTabs. O nome precisa bater exatamente com o arquivo em public/ — ele é
+// servido na raiz do site, e qualquer divergência vira 404 no download.
 
-const CV_URL = '/CV_Jonathan_Fernando_.pdf';
+const CV_FILENAME = 'CV_Jonathan_Fernando.pdf';
+const CV_URL = `/${CV_FILENAME}`;
 
 function CvButton() {
   const [hovered, setHovered] = useState(false);
@@ -207,7 +209,7 @@ function CvButton() {
     if (Platform.OS === 'web') {
       const a = document.createElement('a');
       a.href = CV_URL;
-      a.download = 'CV_Jonathan_Fernando.pdf';
+      a.download = CV_FILENAME;
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
