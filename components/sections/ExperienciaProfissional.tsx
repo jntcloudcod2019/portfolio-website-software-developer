@@ -62,7 +62,6 @@ const EXPERIENCIAS: Experiencia[] = [
       'Ensured backend code quality and reliability by creating robust unit tests using PHPUnit',
     ],
     stack: ['TypeScript', 'React', 'JavaScript (ES6+)', 'Storybook', 'WordPress', 'Gutenberg', 'PHP', 'PHPUnit', 'HTML', 'CSS', 'Figma', 'Azure DevOps'],
-    hidden: true,
   },
   {
     accent: '#34d399', mono: 'PG',
