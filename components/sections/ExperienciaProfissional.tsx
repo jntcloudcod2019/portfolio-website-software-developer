@@ -33,6 +33,9 @@ interface Experiencia {
   bullets:    string[];
   bulletsEn:  string[];
   stack:      string[];
+  /** Oculta a experiência da timeline sem remover os dados. Para voltar a exibir,
+   *  basta apagar a flag do item. */
+  hidden?:    boolean;
 }
 
 const EXPERIENCIAS: Experiencia[] = [
@@ -59,6 +62,7 @@ const EXPERIENCIAS: Experiencia[] = [
       'Ensured backend code quality and reliability by creating robust unit tests using PHPUnit',
     ],
     stack: ['TypeScript', 'React', 'JavaScript (ES6+)', 'Storybook', 'WordPress', 'Gutenberg', 'PHP', 'PHPUnit', 'HTML', 'CSS', 'Figma', 'Azure DevOps'],
+    hidden: true,
   },
   {
     accent: '#34d399', mono: 'PG',
@@ -398,15 +402,19 @@ function TimelineItem({ item, isLast }: { item: Experiencia; isLast: boolean }) 
 // ─── Root ─────────────────────────────────────────────────────────────────────
 
 export function ExperienciaProfissional({ sectionRef }: { sectionRef?: React.Ref<View> }) {
+  // `isLast` precisa ser calculado sobre a lista já filtrada — senão o conector da
+  // timeline seria desenhado a partir do último item visível para o nada.
+  const visiveis = EXPERIENCIAS.filter((exp) => !exp.hidden);
+
   return (
     <Section ref={sectionRef} style={styles.sectionOverride as object}>
       <SectionHeader />
       <View>
-        {EXPERIENCIAS.map((exp, index) => (
+        {visiveis.map((exp, index) => (
           <TimelineItem
             key={`${exp.company}-${exp.role}`}
             item={exp}
-            isLast={index === EXPERIENCIAS.length - 1}
+            isLast={index === visiveis.length - 1}
           />
         ))}
       </View>
